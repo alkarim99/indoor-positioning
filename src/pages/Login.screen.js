@@ -12,7 +12,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-function Login() {
+function Login(props) {
+  const {navigation} = props;
   const listCategory = ['Staff', 'Pengunjung'];
 
   return (
@@ -54,8 +55,8 @@ function Login() {
             />
             <TouchableHighlight
               style={styles.submit}
-              // onPress={() => this.submitSuggestion(this.props)}
-              underlayColor="#fff">
+              onPress={() => navigation.navigate('Home')}
+              underlayColor="#FFCD4B">
               <Text style={styles.submitText}>Login</Text>
             </TouchableHighlight>
           </View>

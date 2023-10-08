@@ -22,6 +22,10 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 const Stack = createNativeStackNavigator();
 
 import Login from './pages/Login.screen';
+import Home from './pages/Home.screen';
+import Navigasi from './pages/Navigasi.screen';
+import Database from './pages/Database.screen';
+import DetailNavigasi from './pages/DetailNavigasi.screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -36,10 +40,30 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Navigasi">
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Navigasi"
+          component={Navigasi}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailNavigasi"
+          component={DetailNavigasi}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Database"
+          component={Database}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
