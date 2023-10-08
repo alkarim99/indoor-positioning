@@ -7,56 +7,23 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string,
-}>;
+const Stack = createNativeStackNavigator();
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import Login from './pages/Login.screen';
 
-function App(): JSX.Element {
+function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -64,55 +31,73 @@ function App(): JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <NavigationContainer>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>./src/App.js</Text> to change
-            this screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  form: {
+    padding: 10,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  logo: {
+    width: 350,
+    resizeMode: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  input: {
+    height: 40,
+    paddingLeft: 15,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: '#176B87',
   },
-  highlight: {
-    fontWeight: '700',
+  button: {
+    margin: 10,
+  },
+  dropdown2BtnStyle: {
+    marginBottom: 12,
+    width: '100%',
+    height: 40,
+    backgroundColor: '#176B87',
+    borderRadius: 30,
+  },
+  dropdown2BtnTxtStyle: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  dropdown2DropdownStyle: {
+    backgroundColor: '#444',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  dropdown2RowStyle: {backgroundColor: '#444', borderBottomColor: '#C5C5C5'},
+  dropdown2RowTxtStyle: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  submit: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#176B87',
+    borderRadius: 30,
+  },
+  submitText: {
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 
