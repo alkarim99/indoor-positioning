@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import {
   Image,
