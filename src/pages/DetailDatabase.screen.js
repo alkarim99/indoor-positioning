@@ -3,84 +3,50 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 
-function DetailNavigasi(props) {
+function DetailDatabase(props) {
   const {route, navigation} = props;
-  const {lantaiId} = route.params;
-  const listCategory = ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'];
+  const {lantaiId} = route?.params;
 
   return (
     <>
       <View style={styles.container}>
-        <View
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.menu}>
+          <Text style={styles.title}>Lantai {lantaiId}</Text>
           <TouchableHighlight
             style={styles.buttonMenu}
-            onPress={() => navigation.navigate('Navigasi')}
+            onPress={() => navigation.navigate('Database')}
             underlayColor="#176B87">
-            <Text style={styles.buttonText}>Navigasi</Text>
+            <Text style={styles.buttonText}>Database</Text>
           </TouchableHighlight>
-          <Text style={styles.title}>Lantai {lantaiId}</Text>
-          <View
-            style={{
-              padding: 20,
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TouchableHighlight
-              style={styles.submit}
-              // onPress={() => navigation.navigate('Home')}
-              underlayColor="#FFCD4B">
-              <Text style={styles.submitText}>Locate Me!</Text>
-            </TouchableHighlight>
-            <SelectDropdown
-              defaultButtonText={'Pilihan'}
-              data={listCategory}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              buttonStyle={styles.dropdown2BtnStyle}
-              buttonTextStyle={styles.dropdown2BtnTxtStyle}
-              dropdownStyle={styles.dropdown2DropdownStyle}
-              rowStyle={styles.dropdown2RowStyle}
-              rowTextStyle={styles.dropdown2RowTxtStyle}
-            />
-            <TouchableHighlight
-              style={styles.submit}
-              // onPress={() => navigation.navigate('Home')}
-              underlayColor="#FFCD4B">
-              <Text style={styles.submitText}>Go</Text>
-            </TouchableHighlight>
-          </View>
+          <TouchableHighlight
+            style={styles.button}
+            onPress={() => navigation.navigate('CreateDatabase', {lantaiId})}
+            underlayColor="#FFCD4B">
+            <Text style={styles.buttonText}>Add Database</Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.button}
+            onPress={() => navigation.navigate('ShowDatabase', {lantaiId})}
+            underlayColor="#FFCD4B">
+            <Text style={styles.buttonText}>Show Database</Text>
+          </TouchableHighlight>
         </View>
-        <Image source={require('../assets/placeholder.png')} />
         <View style={styles.navbar}>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 1})}
+            onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 1})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 1</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 2})}
+            onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 2})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 2</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 3})}
+            onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 3})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 3</Text>
           </TouchableHighlight>
@@ -98,6 +64,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
+  menu: {
+    width: '85%',
+    padding: 10,
+    height: '100vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
   title: {
     marginBottom: 5,
     color: '#000',
@@ -112,6 +86,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFCD4B',
     borderRadius: 30,
     marginBottom: 12,
+  },
+  button: {
+    width: '85%',
+    padding: 10,
+    backgroundColor: '#176B87',
+    borderRadius: 30,
+    marginBottom: 12,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
   },
   navbar: {
     alignSelf: 'flex-end',
@@ -146,8 +131,6 @@ const styles = StyleSheet.create({
     width: '35%',
     height: 40,
     borderWidth: 1,
-    // backgroundColor: '#176B87',
-    // borderRadius: 30,
   },
   dropdown2BtnTxtStyle: {
     color: '#000',
@@ -167,4 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailNavigasi;
+export default DetailDatabase;

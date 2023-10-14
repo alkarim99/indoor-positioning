@@ -17,19 +17,19 @@ function Database(props) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          //   onPress={() => console.log('pressed')}
+          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 1})}
           underlayColor="#FFCD4B">
           <Text style={styles.buttonText}>Lantai 1</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          // onPress={() => this.submitSuggestion(this.props)}
+          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 2})}
           underlayColor="#FFCD4B">
           <Text style={styles.buttonText}>Lantai 2</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          // onPress={() => this.submitSuggestion(this.props)}
+          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 3})}
           underlayColor="#FFCD4B">
           <Text style={styles.buttonText}>Lantai 3</Text>
         </TouchableHighlight>
