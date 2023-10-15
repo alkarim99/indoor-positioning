@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
-import SelectDropdown from 'react-native-select-dropdown';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
 function DetailDatabase(props) {
   const {route, navigation} = props;
@@ -11,12 +10,12 @@ function DetailDatabase(props) {
     <>
       <View style={styles.container}>
         <View style={styles.menu}>
-          <Text style={styles.title}>Lantai {lantaiId}</Text>
+          <Text style={styles.title}>Detail Database Lantai {lantaiId}</Text>
           <TouchableHighlight
             style={styles.buttonMenu}
             onPress={() => navigation.navigate('Database')}
             underlayColor="#176B87">
-            <Text style={styles.buttonText}>Database</Text>
+            <Text style={styles.buttonText}>Back</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.button}

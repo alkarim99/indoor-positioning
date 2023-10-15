@@ -21,9 +21,9 @@ function DetailNavigasi(props) {
             style={styles.buttonMenu}
             onPress={() => navigation.navigate('Navigasi')}
             underlayColor="#176B87">
-            <Text style={styles.buttonText}>Navigasi</Text>
+            <Text style={styles.buttonText}>Back</Text>
           </TouchableHighlight>
-          <Text style={styles.title}>Lantai {lantaiId}</Text>
+          <Text style={styles.title}>Detail Navigasi Lantai {lantaiId}</Text>
           <View
             style={{
               padding: 20,
@@ -113,6 +113,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginBottom: 12,
   },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
   navbar: {
     alignSelf: 'flex-end',
     flexDirection: 'row',
@@ -146,8 +150,6 @@ const styles = StyleSheet.create({
     width: '35%',
     height: 40,
     borderWidth: 1,
-    // backgroundColor: '#176B87',
-    // borderRadius: 30,
   },
   dropdown2BtnTxtStyle: {
     color: '#000',

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
 import {Snackbar} from 'react-native-paper';
+import wifiReborn from 'react-native-wifi-reborn';
 import {
   StyleSheet,
   Text,
@@ -18,12 +19,18 @@ function CreateDatabase(props) {
   const [name, setName] = useState('');
   const [coordX, setCoordX] = useState('');
   const [coordY, setCoordY] = useState('');
-  const [lantai, setLantai] = useState(lantaiId);
+  const [lantai, setLantai] = useState(`Lantai ${lantaiId}`);
   const [rss, setRss] = useState('[20,20,20,20]');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [wifiList, setWifiList] = useState([]);
+
   const [errorMessages, setErrorMessages] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
+
+  useEffect(() => {
+    getWifiList();
+  }, []);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -41,6 +48,17 @@ function CreateDatabase(props) {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const getWifiList = () => {
+    wifiReborn.loadWifiList().then(wifi => {
+      setWifiList(wifi);
+      let rssList = [];
+      wifi.map(w => {
+        rssList.push(w?.level);
+      });
+      setRss(rssList);
+    });
   };
 
   return (
@@ -81,24 +99,34 @@ function CreateDatabase(props) {
             keyboardType="numeric"
           />
         </View>
-        <SelectDropdown
-          defaultButtonText={'Lantai'}
-          data={listCategory}
-          onSelect={(selectedItem, index) => {
-            setLantai(selectedItem);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
-          buttonStyle={styles.dropdown2BtnStyle}
-          buttonTextStyle={styles.dropdown2BtnTxtStyle}
-          dropdownStyle={styles.dropdown2DropdownStyle}
-          rowStyle={styles.dropdown2RowStyle}
-          rowTextStyle={styles.dropdown2RowTxtStyle}
-        />
+        <View style={{width: '80%'}}>
+          {wifiList.length == 0 ? (
+            <>
+              <Text>Tidak ada data</Text>
+            </>
+          ) : (
+            wifiList.map((wifi, index) => {
+              return (
+                <>
+                  <View
+                    style={{
+                      paddingTop: 2,
+                      paddingBottom: 2,
+                    }}
+                    key={index}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        padding: 2,
+                      }}>
+                      SSID = {wifi?.SSID}, RSS = {wifi?.level} dBm
+                    </Text>
+                  </View>
+                </>
+              );
+            })
+          )}
+        </View>
         <TouchableHighlight
           style={styles.submit}
           onPress={handleSubmit}
@@ -114,7 +142,6 @@ function CreateDatabase(props) {
           duration={2000}>
           Success add database
         </Snackbar>
-
         <Snackbar
           visible={Boolean(errorMessages)}
           style={{width: '100%', backgroundColor: '#CB3837'}}
@@ -170,29 +197,6 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 10,
-  },
-  dropdown2BtnStyle: {
-    marginBottom: 12,
-    width: '100%',
-    height: 40,
-    backgroundColor: '#176B87',
-    borderRadius: 30,
-  },
-  dropdown2BtnTxtStyle: {
-    color: '#FFF',
-    textAlign: 'center',
-    fontSize: 14,
-  },
-  dropdown2DropdownStyle: {
-    backgroundColor: '#444',
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-  },
-  dropdown2RowStyle: {backgroundColor: '#444', borderBottomColor: '#C5C5C5'},
-  dropdown2RowTxtStyle: {
-    color: '#FFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
   },
   submit: {
     paddingTop: 10,

@@ -19,6 +19,7 @@ function Home(props) {
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
+            <Text style={styles.title}>Indoor Positioning</Text>
             <TouchableHighlight
               style={styles.button}
               onPress={() => navigation.navigate('Navigasi')}
@@ -32,9 +33,9 @@ function Home(props) {
               <Text style={styles.buttonText}>Database</Text>
             </TouchableHighlight>
             <TouchableHighlight
-              style={styles.button}
+              style={styles.buttonLogout}
               onPress={() => navigation.navigate('Login')}
-              underlayColor="#FFCD4B">
+              underlayColor="#176B87">
               <Text style={styles.buttonText}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -49,13 +50,27 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 350,
+    width: 340,
     resizeMode: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 38,
+    fontWeight: 'bold',
+    marginBottom: 15,
   },
   button: {
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#176B87',
+    borderRadius: 30,
+    marginBottom: 12,
+  },
+  buttonLogout: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#FFCD4B',
     borderRadius: 30,
     marginBottom: 12,
   },

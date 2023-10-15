@@ -13,25 +13,25 @@ function Navigasi(props) {
           style={styles.buttonMenu}
           onPress={() => navigation.navigate('Home')}
           underlayColor="#176B87">
-          <Text style={styles.buttonText}>Menu</Text>
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
           onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 1})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Lantai 1</Text>
+          <Text style={styles.buttonText}>Navigasi Lantai 1</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
           onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 2})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Lantai 2</Text>
+          <Text style={styles.buttonText}>Navigasi Lantai 2</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
           onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 3})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Lantai 3</Text>
+          <Text style={styles.buttonText}>Navigasi Lantai 3</Text>
         </TouchableHighlight>
       </View>
     </>
