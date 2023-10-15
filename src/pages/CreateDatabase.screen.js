@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
+import {Snackbar} from 'react-native-paper';
 import {
   StyleSheet,
   Text,
@@ -21,17 +22,21 @@ function CreateDatabase(props) {
   const [rss, setRss] = useState('[20,20,20,20]');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [errorMessages, setErrorMessages] = React.useState(null);
+  const [isSuccess, setIsSuccess] = React.useState(false);
+
   const handleSubmit = async () => {
     setIsLoading(true);
     const payload = {name, lantai, coord_x: coordX, coord_y: coordY, rss};
-    console.log(payload);
     axios
       .post('https://fine-lime-catfish-vest.cyclic.app/fingerprint', payload)
       .then(res => {
         console.log(res?.data?.message);
+        setIsSuccess(true);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);
@@ -102,6 +107,26 @@ function CreateDatabase(props) {
             {isLoading ? 'Loading...' : 'Submit'}
           </Text>
         </TouchableHighlight>
+        <Snackbar
+          visible={isSuccess}
+          style={{width: '100%', backgroundColor: '#79C079'}}
+          onDismiss={() => navigation.navigate('CreateDatabase', lantaiId)}
+          duration={2000}>
+          Success add database
+        </Snackbar>
+
+        <Snackbar
+          visible={Boolean(errorMessages)}
+          style={{width: '100%', backgroundColor: '#CB3837'}}
+          onDismiss={() => setErrorMessages(null)}
+          action={{
+            label: 'X',
+            onPress: () => {
+              setErrorMessages(null);
+            },
+          }}>
+          {errorMessages}
+        </Snackbar>
       </View>
     </>
   );

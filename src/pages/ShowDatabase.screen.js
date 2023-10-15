@@ -6,15 +6,17 @@ import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 function ShowDatabase(props) {
   const {route, navigation} = props;
   const {lantaiId} = route.params;
-  const [listWifi, setListWifi] = useState([]);
+  const [listData, setListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get('https://fine-lime-catfish-vest.cyclic.app/fingerprint')
+      .get(
+        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantaiId}`,
+      )
       .then(res => {
-        setListWifi(res?.data?.result);
+        setListData(res?.data?.result);
       })
       .catch(error => {
         console.log(error);
@@ -45,30 +47,37 @@ function ShowDatabase(props) {
           <Text style={styles.buttonText}>Detail Database</Text>
         </TouchableHighlight>
         <View style={{width: '80%'}}>
-          {listWifi.map((wifi, index) => {
-            return (
-              <>
-                <View
-                  style={{
-                    paddingTop: 2,
-                  }}>
-                  <Text
+          {listData.length == 0 ? (
+            <>
+              <Text>Tidak ada data</Text>
+            </>
+          ) : (
+            listData.map((wifi, index) => {
+              return (
+                <>
+                  <View
                     style={{
-                      color: 'white',
-                      padding: 2,
-                      backgroundColor: '#176B87',
-                      textAlign: 'center',
-                    }}>
-                    Name = {wifi?.name}, Lantai = {wifi?.lantai}
-                  </Text>
-                  <Text style={{color: 'black', textAlign: 'center'}}>
-                    Coordinate = {wifi?.coord_x}, {wifi?.coord_y} | RSS ={' '}
-                    {wifi?.rss}
-                  </Text>
-                </View>
-              </>
-            );
-          })}
+                      paddingTop: 2,
+                    }}
+                    key={index}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        padding: 2,
+                        backgroundColor: '#176B87',
+                        textAlign: 'center',
+                      }}>
+                      Name = {wifi?.name}, Lantai = {wifi?.lantai}
+                    </Text>
+                    <Text style={{color: 'black', textAlign: 'center'}}>
+                      Coordinate = {wifi?.coord_x}, {wifi?.coord_y} | RSS ={' '}
+                      {wifi?.rss}
+                    </Text>
+                  </View>
+                </>
+              );
+            })
+          )}
         </View>
       </View>
     </>
