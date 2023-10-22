@@ -20,9 +20,9 @@ import Home from './pages/Home.screen';
 import Navigasi from './pages/Navigasi.screen';
 import Database from './pages/Database.screen';
 import DetailNavigasi from './pages/DetailNavigasi.screen';
-import DetailDatabase from './pages/DetailDatabase.screen';
-import CreateDatabase from './pages/CreateDatabase.screen';
-import ShowDatabase from './pages/ShowDatabase.screen';
+import IndexFingerprint from './pages/fingerprint/index.screen';
+import CreateFingerprint from './pages/fingerprint/create.screen';
+import EditFingerprint from './pages/fingerprint/edit.screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -37,7 +37,7 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Database">
         <Stack.Screen
           name="Login"
           component={Login}
@@ -64,18 +64,18 @@ function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="DetailDatabase"
-          component={DetailDatabase}
+          name="IndexFingerprint"
+          component={IndexFingerprint}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="CreateDatabase"
-          component={CreateDatabase}
+          name="CreateFingerprint"
+          component={CreateFingerprint}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="ShowDatabase"
-          component={ShowDatabase}
+          name="EditFingerprint"
+          component={EditFingerprint}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

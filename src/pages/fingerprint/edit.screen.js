@@ -10,17 +10,21 @@ import {
   View,
   TextInput,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 
-function CreateDatabase(props) {
+function EditFingerprint(props) {
   const {navigation, route} = props;
+  const {fingerprint_id} = route?.params;
   const listCategory = ['Lantai 1', 'Lantai 2', 'Lantai 3'];
-  const {lantaiId} = route.params;
+  const [fingerprintId, setFingerprintId] = useState('');
   const [name, setName] = useState('');
   const [coordX, setCoordX] = useState('');
   const [coordY, setCoordY] = useState('');
-  const [lantai, setLantai] = useState(`Lantai ${lantaiId}`);
-  const [rss, setRss] = useState('[20,20,20,20]');
+  const [lantai, setLantai] = useState('');
+  const [dbRss, setDbRss] = useState('');
+  const [rss, setRss] = useState('');
+  const [isGetLoading, setIsGetLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [wifiList, setWifiList] = useState([]);
@@ -29,14 +33,57 @@ function CreateDatabase(props) {
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => {
-    getWifiList();
+    setIsGetLoading(true);
+    axios
+      .get(
+        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
+      )
+      .then(res => {
+        const data = res?.data?.result[0];
+        setFingerprintId(data?.fingerprint_id);
+        setName(data?.name);
+        setCoordX(data?.coord_x);
+        setCoordY(data?.coord_y);
+        setLantai(data?.lantai);
+        setDbRss(data?.rss);
+        getWifiList();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsGetLoading(false);
+      });
   }, []);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     const payload = {name, lantai, coord_x: coordX, coord_y: coordY, rss};
+    console.log(payload);
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/fingerprint', payload)
+      .patch(
+        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprintId}`,
+        payload,
+      )
+      .then(res => {
+        console.log(res?.data?.message);
+        setIsSuccess(true);
+      })
+      .catch(error => {
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    axios
+      .delete(
+        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprintId}`,
+      )
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);
@@ -61,15 +108,26 @@ function CreateDatabase(props) {
     });
   };
 
+  if (isGetLoading) {
+    return (
+      <>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{marginBottom: 2}}>Get database</Text>
+          <ActivityIndicator />
+        </View>
+      </>
+    );
+  }
+
   return (
     <>
       <View style={styles.form}>
-        <Text style={styles.title}>Add Database Lantai {lantaiId}</Text>
+        <Text style={styles.title}>Update Fingerprint</Text>
         <TouchableHighlight
           style={styles.buttonMenu}
-          onPress={() => navigation.navigate('DetailDatabase', {lantaiId})}
+          onPress={() => navigation.navigate('IndexFingerprint', {lantai})}
           underlayColor="#176B87">
-          <Text style={styles.buttonText}>Detail Database</Text>
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
         <TextInput
           style={styles.input}
@@ -99,6 +157,9 @@ function CreateDatabase(props) {
             keyboardType="numeric"
           />
         </View>
+        <Text style={{color: '#000', textAlign: 'center'}}>
+          DB RSS = {dbRss}
+        </Text>
         <View style={{width: '80%'}}>
           {wifiList.length == 0 ? (
             <>
@@ -135,12 +196,22 @@ function CreateDatabase(props) {
             {isLoading ? 'Loading...' : 'Submit'}
           </Text>
         </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.buttonDelete}
+          onPress={() => {
+            handleDelete();
+          }}
+          underlayColor="#176B87">
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Loading...' : 'Delete'}
+          </Text>
+        </TouchableHighlight>
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
-          onDismiss={() => navigation.navigate('CreateDatabase', lantaiId)}
+          onDismiss={() => navigation.navigate('IndexFingerprint', lantai)}
           duration={2000}>
-          Success add database
+          Success update database
         </Snackbar>
         <Snackbar
           visible={Boolean(errorMessages)}
@@ -169,6 +240,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#FFCD4B',
+    borderRadius: 30,
+    marginBottom: 12,
+  },
+  buttonDelete: {
+    padding: 10,
+    backgroundColor: '#D80032',
     borderRadius: 30,
     marginBottom: 12,
   },
@@ -203,6 +280,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: '#176B87',
     borderRadius: 30,
+    marginBottom: 5,
   },
   submitText: {
     color: '#fff',
@@ -210,4 +288,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateDatabase;
+export default EditFingerprint;

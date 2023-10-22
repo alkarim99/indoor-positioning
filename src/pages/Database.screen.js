@@ -17,21 +17,24 @@ function Database(props) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 1})}
+          onPress={() => navigation.navigate('IndexFingerprint', {lantai: 1})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Database Lantai 1</Text>
+          <Text style={styles.buttonText}>Fingerprint</Text>
+          {/* <Text style={styles.buttonText}>Database Lantai 1</Text> */}
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 2})}
+          // onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 2})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Database Lantai 2</Text>
+          <Text style={styles.buttonText}>Navigation</Text>
+          {/* <Text style={styles.buttonText}>Database Lantai 2</Text> */}
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 3})}
+          // onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 3})}
           underlayColor="#FFCD4B">
-          <Text style={styles.buttonText}>Database Lantai 3</Text>
+          <Text style={styles.buttonText}>Weight</Text>
+          {/* <Text style={styles.buttonText}>Database Lantai 3</Text> */}
         </TouchableHighlight>
       </View>
     </>
