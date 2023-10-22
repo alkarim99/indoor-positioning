@@ -10,68 +10,30 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-const listData = [
-  {
-    route_id: 1,
-    start: 'Ruang A',
-    end: 'Ruang B',
-    route: '[10,10], [11,11], [12,12], [13,13]',
-    lantai: 1,
-  },
-  {
-    route_id: 2,
-    start: 'Ruang A',
-    end: 'Ruang B',
-    route: '[10,10], [11,11], [12,12], [13,13]',
-    lantai: 1,
-  },
-  {
-    route_id: 3,
-    start: 'Ruang A',
-    end: 'Ruang B',
-    route: '[10,10], [11,11], [12,12], [13,13]',
-    lantai: 1,
-  },
-  {
-    route_id: 4,
-    start: 'Ruang A',
-    end: 'Ruang B',
-    route: '[10,10], [11,11], [12,12], [13,13]',
-    lantai: 1,
-  },
-  {
-    route_id: 5,
-    start: 'Ruang A',
-    end: 'Ruang B',
-    route: '[10,10], [11,11], [12,12], [13,13]',
-    lantai: 1,
-  },
-];
-
 function IndexRoute(props) {
   const {route, navigation} = props;
   const {lantai} = route?.params;
-  // const [listData, setListData] = useState([]);
+  const [listData, setListData] = useState([]);
   const [isGetLoading, setIsGetLoading] = useState(false);
 
   useEffect(() => {
-    // setListData([]);
-    // setIsGetLoading(true);
-    // console.log(lantai);
-    // axios
-    //   .get(
-    //     `https://fine-lime-catfish-vest.cyclic.app/route/lantai/${lantai}`,
-    //   )
-    //   .then(res => {
-    //     setListData(res?.data?.result);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   })
-    //   .finally(() => {
-    //     setIsGetLoading(false);
-    //   });
-  }, []);
+    setListData([]);
+    setIsGetLoading(true);
+    console.log(lantai);
+    axios
+      .get(
+        `https://fine-lime-catfish-vest.cyclic.app/navigation/lantai/${lantai}`,
+      )
+      .then(res => {
+        setListData(res?.data?.result);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsGetLoading(false);
+      });
+  }, [route, lantai]);
 
   if (isGetLoading) {
     return (
@@ -132,7 +94,7 @@ function IndexRoute(props) {
                       style={styles.buttonEdit}
                       onPress={() =>
                         navigation.navigate('EditNavigation', {
-                          route_id: data?.route_id,
+                          navigation_id: data?.navigation_id,
                         })
                       }
                       underlayColor="#176B87">

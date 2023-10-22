@@ -33,7 +33,7 @@ function IndexFingerprint(props) {
       .finally(() => {
         setIsGetLoading(false);
       });
-  }, [lantai]);
+  }, [route, lantai]);
 
   if (isGetLoading) {
     return (

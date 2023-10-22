@@ -13,7 +13,7 @@ import {
 
 function EditNavigation(props) {
   const {navigation, route} = props;
-  const {route_id} = route.params;
+  const {navigation_id} = route.params;
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [routeData, setRouteData] = useState('');
@@ -27,7 +27,9 @@ function EditNavigation(props) {
   useEffect(() => {
     setIsGetLoading(true);
     axios
-      .get(`https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`)
+      .get(
+        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+      )
       .then(res => {
         const data = res?.data?.result[0];
         setStart(data?.start);
@@ -48,7 +50,7 @@ function EditNavigation(props) {
     const payload = {start, lantai, end, route: routeData};
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`,
+        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
         payload,
       )
       .then(res => {
@@ -67,7 +69,9 @@ function EditNavigation(props) {
   const handleDelete = async () => {
     setIsLoading(true);
     axios
-      .delete(`https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`)
+      .delete(
+        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+      )
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);

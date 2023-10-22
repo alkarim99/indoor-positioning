@@ -25,7 +25,7 @@ function CreateNavigation(props) {
     setIsLoading(true);
     const payload = {start, lantai, end, route: routeData};
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/route', payload)
+      .post('https://fine-lime-catfish-vest.cyclic.app/navigation', payload)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);
