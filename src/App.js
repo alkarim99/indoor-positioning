@@ -23,6 +23,9 @@ import DetailNavigasi from './pages/DetailNavigasi.screen';
 import IndexFingerprint from './pages/fingerprint/index.screen';
 import CreateFingerprint from './pages/fingerprint/create.screen';
 import EditFingerprint from './pages/fingerprint/edit.screen';
+import IndexNavigation from './pages/navigation/index.screen';
+import CreateNavigation from './pages/navigation/create.screen';
+import EditNavigation from './pages/navigation/edit.screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -76,6 +79,21 @@ function App() {
         <Stack.Screen
           name="EditFingerprint"
           component={EditFingerprint}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="IndexNavigation"
+          component={IndexNavigation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreateNavigation"
+          component={CreateNavigation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditNavigation"
+          component={EditNavigation}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

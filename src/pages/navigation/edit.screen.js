@@ -2,7 +2,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Snackbar} from 'react-native-paper';
-import wifiReborn from 'react-native-wifi-reborn';
 import {
   StyleSheet,
   Text,
@@ -12,19 +11,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-function EditFingerprint(props) {
+function EditNavigation(props) {
   const {navigation, route} = props;
-  const {fingerprint_id} = route?.params;
-  const [name, setName] = useState('');
-  const [coordX, setCoordX] = useState('');
-  const [coordY, setCoordY] = useState('');
+  const {route_id} = route.params;
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [routeData, setRouteData] = useState('');
   const [lantai, setLantai] = useState('');
-  const [dbRss, setDbRss] = useState('');
-  const [rss, setRss] = useState('');
-  const [isGetLoading, setIsGetLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [wifiList, setWifiList] = useState([]);
+  const [isGetLoading, setIsGetLoading] = useState(false);
 
   const [errorMessages, setErrorMessages] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -32,17 +27,13 @@ function EditFingerprint(props) {
   useEffect(() => {
     setIsGetLoading(true);
     axios
-      .get(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
-      )
+      .get(`https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`)
       .then(res => {
         const data = res?.data?.result[0];
-        setName(data?.name);
-        setCoordX(data?.coord_x);
-        setCoordY(data?.coord_y);
+        setStart(data?.start);
+        setEnd(data?.end);
+        setRouteData(data?.route);
         setLantai(data?.lantai);
-        setDbRss(data?.rss);
-        getWifiList();
       })
       .catch(error => {
         console.log(error);
@@ -54,11 +45,10 @@ function EditFingerprint(props) {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const payload = {name, lantai, coord_x: coordX, coord_y: coordY, rss};
-    console.log(payload);
+    const payload = {start, lantai, end, route: routeData};
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
+        `https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`,
         payload,
       )
       .then(res => {
@@ -77,9 +67,7 @@ function EditFingerprint(props) {
   const handleDelete = async () => {
     setIsLoading(true);
     axios
-      .delete(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
-      )
+      .delete(`https://fine-lime-catfish-vest.cyclic.app/route/${route_id}`)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);
@@ -91,17 +79,6 @@ function EditFingerprint(props) {
       .finally(() => {
         setIsLoading(false);
       });
-  };
-
-  const getWifiList = () => {
-    wifiReborn.loadWifiList().then(wifi => {
-      setWifiList(wifi);
-      let rssList = [];
-      wifi.map(w => {
-        rssList.push(w?.level);
-      });
-      setRss(rssList);
-    });
   };
 
   if (isGetLoading) {
@@ -118,19 +95,13 @@ function EditFingerprint(props) {
   return (
     <>
       <View style={styles.form}>
-        <Text style={styles.title}>Update Fingerprint</Text>
+        <Text style={styles.title}>Update Navigation Lantai {lantai}</Text>
         <TouchableHighlight
           style={styles.buttonMenu}
-          onPress={() => navigation.navigate('IndexFingerprint', {lantai})}
+          onPress={() => navigation.navigate('IndexNavigation', {lantai})}
           underlayColor="#176B87">
           <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
-        <TextInput
-          style={styles.input}
-          onChangeText={setName}
-          value={name}
-          placeholder="Name"
-        />
         <View
           style={{
             width: '100%',
@@ -140,50 +111,24 @@ function EditFingerprint(props) {
           }}>
           <TextInput
             style={{...styles.input, width: '50%'}}
-            onChangeText={setCoordX}
-            value={coordX}
-            placeholder="Coordinate X"
-            keyboardType="numeric"
+            onChangeText={setStart}
+            value={start}
+            placeholder="Start"
           />
           <TextInput
             style={{...styles.input, width: '50%'}}
-            onChangeText={setCoordY}
-            value={coordY}
-            placeholder="Coordinate Y"
-            keyboardType="numeric"
+            onChangeText={setEnd}
+            value={end}
+            placeholder="End"
           />
         </View>
-        <Text style={{color: '#000', textAlign: 'center'}}>
-          DB RSS = {dbRss}
-        </Text>
-        <View style={{width: '80%'}}>
-          {wifiList.length == 0 ? (
-            <>
-              <Text>Tidak ada data</Text>
-            </>
-          ) : (
-            wifiList.map((wifi, index) => {
-              return (
-                <>
-                  <View
-                    style={{
-                      paddingTop: 2,
-                      paddingBottom: 2,
-                    }}
-                    key={index}>
-                    <Text
-                      style={{
-                        color: 'black',
-                        padding: 2,
-                      }}>
-                      SSID = {wifi?.SSID}, RSS = {wifi?.level} dBm
-                    </Text>
-                  </View>
-                </>
-              );
-            })
-          )}
-        </View>
+        <TextInput
+          style={styles.input}
+          onChangeText={setRouteData}
+          value={routeData}
+          placeholder="End"
+        />
+
         <TouchableHighlight
           style={styles.submit}
           onPress={handleSubmit}
@@ -205,7 +150,7 @@ function EditFingerprint(props) {
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
-          onDismiss={() => navigation.navigate('IndexFingerprint', lantai)}
+          onDismiss={() => navigation.navigate('IndexNavigation', {lantai: 1})}
           duration={2000}>
           Success
         </Snackbar>
@@ -284,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditFingerprint;
+export default EditNavigation;

@@ -10,30 +10,68 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-function IndexFingerprint(props) {
+const listData = [
+  {
+    route_id: 1,
+    start: 'Ruang A',
+    end: 'Ruang B',
+    route: '[10,10], [11,11], [12,12], [13,13]',
+    lantai: 1,
+  },
+  {
+    route_id: 2,
+    start: 'Ruang A',
+    end: 'Ruang B',
+    route: '[10,10], [11,11], [12,12], [13,13]',
+    lantai: 1,
+  },
+  {
+    route_id: 3,
+    start: 'Ruang A',
+    end: 'Ruang B',
+    route: '[10,10], [11,11], [12,12], [13,13]',
+    lantai: 1,
+  },
+  {
+    route_id: 4,
+    start: 'Ruang A',
+    end: 'Ruang B',
+    route: '[10,10], [11,11], [12,12], [13,13]',
+    lantai: 1,
+  },
+  {
+    route_id: 5,
+    start: 'Ruang A',
+    end: 'Ruang B',
+    route: '[10,10], [11,11], [12,12], [13,13]',
+    lantai: 1,
+  },
+];
+
+function IndexRoute(props) {
   const {route, navigation} = props;
   const {lantai} = route?.params;
-  const [listData, setListData] = useState([]);
+  // const [listData, setListData] = useState([]);
   const [isGetLoading, setIsGetLoading] = useState(false);
 
   useEffect(() => {
-    setListData([]);
-    setIsGetLoading(true);
-    console.log(lantai);
-    axios
-      .get(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantai}`,
-      )
-      .then(res => {
-        setListData(res?.data?.result);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      .finally(() => {
-        setIsGetLoading(false);
-      });
-  }, [lantai]);
+    // setListData([]);
+    // setIsGetLoading(true);
+    // console.log(lantai);
+    // axios
+    //   .get(
+    //     `https://fine-lime-catfish-vest.cyclic.app/route/lantai/${lantai}`,
+    //   )
+    //   .then(res => {
+    //     setListData(res?.data?.result);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   })
+    //   .finally(() => {
+    //     setIsGetLoading(false);
+    //   });
+  }, []);
 
   if (isGetLoading) {
     return (
@@ -55,11 +93,11 @@ function IndexFingerprint(props) {
         <Text style={styles.buttonText}>Back</Text>
       </TouchableHighlight>
       <View style={styles.container}>
-        <Text style={styles.title}>Detail Fingerprint Lantai {lantai}</Text>
+        <Text style={styles.title}>Detail Navigation Lantai {lantai}</Text>
         <View style={styles.menu}>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => navigation.navigate('CreateFingerprint', {lantai})}
+            onPress={() => navigation.navigate('CreateNavigation', {lantai})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonText}>Add Data</Text>
           </TouchableHighlight>
@@ -70,7 +108,7 @@ function IndexFingerprint(props) {
               <Text style={{textAlign: 'center'}}>Tidak ada data</Text>
             </>
           ) : (
-            listData.map((wifi, index) => {
+            listData.map((data, index) => {
               return (
                 <>
                   <View
@@ -85,17 +123,16 @@ function IndexFingerprint(props) {
                         backgroundColor: '#176B87',
                         textAlign: 'center',
                       }}>
-                      Name = {wifi?.name}, Lantai = {wifi?.lantai}
+                      From = {data?.start}, To = {data?.end}
                     </Text>
                     <Text style={{color: 'black', textAlign: 'center'}}>
-                      Coordinate = {wifi?.coord_x}, {wifi?.coord_y} | RSS ={' '}
-                      {wifi?.rss}
+                      Route = {data?.route}
                     </Text>
                     <TouchableHighlight
                       style={styles.buttonEdit}
                       onPress={() =>
-                        navigation.navigate('EditFingerprint', {
-                          fingerprint_id: wifi?.fingerprint_id,
+                        navigation.navigate('EditNavigation', {
+                          route_id: data?.route_id,
                         })
                       }
                       underlayColor="#176B87">
@@ -110,19 +147,19 @@ function IndexFingerprint(props) {
         <View style={styles.navbar}>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexFingerprint', {lantai: 1})}
+            onPress={() => navigation.navigate('IndexNavigation', {lantai: 1})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 1</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexFingerprint', {lantai: 2})}
+            onPress={() => navigation.navigate('IndexNavigation', {lantai: 2})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 2</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexFingerprint', {lantai: 3})}
+            onPress={() => navigation.navigate('IndexNavigation', {lantai: 3})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 3</Text>
           </TouchableHighlight>
@@ -238,4 +275,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IndexFingerprint;
+export default IndexRoute;
