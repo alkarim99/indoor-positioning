@@ -1,12 +1,63 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  Image,
+  LogBox,
+} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
+import wifiReborn from 'react-native-wifi-reborn';
+import {Snackbar} from 'react-native-paper';
 
 function DetailNavigasi(props) {
   const {route, navigation} = props;
   const {lantaiId} = route.params;
+  const [isLoading, setIsLoading] = useState(false);
+  const [wifiList, setWifiList] = useState([]);
+  const [rss, setRss] = useState('');
+  const [location, setLocation] = useState('');
   const listCategory = ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'];
+
+  const [errorMessages, setErrorMessages] = React.useState(null);
+  const [isSuccess, setIsSuccess] = React.useState(false);
+
+  useEffect(() => {
+    getWifiList();
+  }, []);
+
+  const handleLocateMe = async () => {
+    setIsLoading(true);
+    const payload = {rss, lantai_id: lantaiId};
+    axios
+      .post(`https://fine-lime-catfish-vest.cyclic.app/location`, payload)
+      .then(res => {
+        setIsSuccess(true);
+        console.log(res?.data?.result);
+        setLocation(res?.data?.result?.kNN?.kNNLocation);
+      })
+      .catch(error => {
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const getWifiList = () => {
+    wifiReborn.loadWifiList().then(wifi => {
+      setWifiList(wifi);
+      let rssList = [];
+      wifi.map(w => {
+        rssList.push(w?.level);
+      });
+      setRss(rssList);
+    });
+  };
 
   return (
     <>
@@ -34,9 +85,11 @@ function DetailNavigasi(props) {
             }}>
             <TouchableHighlight
               style={styles.submit}
-              // onPress={() => navigation.navigate('Home')}
+              onPress={handleLocateMe}
               underlayColor="#FFCD4B">
-              <Text style={styles.submitText}>Locate Me!</Text>
+              <Text style={styles.submitText}>
+                {isLoading ? 'Loading...' : 'Locate Me!'}
+              </Text>
             </TouchableHighlight>
             <SelectDropdown
               defaultButtonText={'Pilihan'}
@@ -65,6 +118,27 @@ function DetailNavigasi(props) {
           </View>
         </View>
         <Image source={require('../assets/placeholder.png')} />
+        <Snackbar
+          visible={isSuccess}
+          style={{width: '100%', backgroundColor: '#79C079'}}
+          onDismiss={() => {
+            navigation.navigate('DetailNavigasi');
+          }}
+          duration={2000}>
+          Your location at {location}
+        </Snackbar>
+        <Snackbar
+          visible={Boolean(errorMessages)}
+          style={{width: '100%', backgroundColor: '#CB3837'}}
+          onDismiss={() => setErrorMessages(null)}
+          action={{
+            label: 'X',
+            onPress: () => {
+              setErrorMessages(null);
+            },
+          }}>
+          {errorMessages}
+        </Snackbar>
         <View style={styles.navbar}>
           <TouchableHighlight
             style={styles.buttonNavbar}

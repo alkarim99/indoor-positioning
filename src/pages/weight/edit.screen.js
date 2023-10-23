@@ -11,13 +11,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-function EditNavigation(props) {
+function EditWeight(props) {
   const {navigation, route} = props;
-  const {navigation_id} = route.params;
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
-  const [routeData, setRouteData] = useState('');
-  const [lantai, setLantai] = useState('');
+  const {weight_id} = route.params;
+  const [weight, setWeight] = useState('');
+  const [active, setActive] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGetLoading, setIsGetLoading] = useState(false);
 
@@ -27,15 +25,11 @@ function EditNavigation(props) {
   useEffect(() => {
     setIsGetLoading(true);
     axios
-      .get(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
-      )
+      .get(`https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`)
       .then(res => {
         const data = res?.data?.result[0];
-        setStart(data?.start);
-        setEnd(data?.end);
-        setRouteData(data?.route);
-        setLantai(data?.lantai);
+        setWeight(data?.weight);
+        setActive(data?.is_active);
       })
       .catch(error => {
         console.log(error);
@@ -47,11 +41,30 @@ function EditNavigation(props) {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const payload = {start, lantai, end, route: routeData};
+    const payload = {weight};
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+        `https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`,
         payload,
+      )
+      .then(res => {
+        console.log(res?.data?.message);
+        setIsSuccess(true);
+      })
+      .catch(error => {
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleActivate = async () => {
+    setIsLoading(true);
+    axios
+      .patch(
+        `https://fine-lime-catfish-vest.cyclic.app/weight/activate/${weight_id}`,
       )
       .then(res => {
         console.log(res?.data?.message);
@@ -69,9 +82,7 @@ function EditNavigation(props) {
   const handleDelete = async () => {
     setIsLoading(true);
     axios
-      .delete(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
-      )
+      .delete(`https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);
@@ -99,38 +110,18 @@ function EditNavigation(props) {
   return (
     <>
       <View style={styles.form}>
-        <Text style={styles.title}>Update Navigation Lantai {lantai}</Text>
+        <Text style={styles.title}>Update Weight</Text>
         <TouchableHighlight
           style={styles.buttonMenu}
-          onPress={() => navigation.navigate('IndexNavigation', {lantai})}
+          onPress={() => navigation.navigate('IndexWeight')}
           underlayColor="#176B87">
           <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
-        <View
-          style={{
-            width: '100%',
-            display: 'flex',
-            gap: 2,
-            flexDirection: 'row',
-          }}>
-          <TextInput
-            style={{...styles.input, width: '50%'}}
-            onChangeText={setStart}
-            value={start}
-            placeholder="Start"
-          />
-          <TextInput
-            style={{...styles.input, width: '50%'}}
-            onChangeText={setEnd}
-            value={end}
-            placeholder="End"
-          />
-        </View>
         <TextInput
           style={{...styles.input, height: '20%'}}
           multiline={true}
-          onChangeText={setRouteData}
-          value={routeData}
+          onChangeText={setWeight}
+          value={weight}
           placeholder="Route (x,y)"
           textAlignVertical="top"
         />
@@ -143,6 +134,23 @@ function EditNavigation(props) {
             {isLoading ? 'Loading...' : 'Submit'}
           </Text>
         </TouchableHighlight>
+        {active == 0 ? (
+          <>
+            <TouchableHighlight
+              style={styles.submit}
+              onPress={handleActivate}
+              underlayColor="#FFCD4B">
+              <Text style={styles.submitText}>
+                {isLoading ? 'Loading...' : 'Activate Weight'}
+              </Text>
+            </TouchableHighlight>
+          </>
+        ) : (
+          <Text style={{textAlign: 'center', color: '#000', fontSize: '14'}}>
+            Active Weight
+          </Text>
+        )}
+
         <TouchableHighlight
           style={styles.buttonDelete}
           onPress={() => {
@@ -156,7 +164,7 @@ function EditNavigation(props) {
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
-          onDismiss={() => navigation.navigate('IndexNavigation', {lantai: 1})}
+          onDismiss={() => navigation.navigate('IndexWeight')}
           duration={2000}>
           Success
         </Snackbar>
@@ -235,4 +243,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditNavigation;
+export default EditWeight;

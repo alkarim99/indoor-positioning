@@ -26,6 +26,9 @@ import EditFingerprint from './pages/fingerprint/edit.screen';
 import IndexNavigation from './pages/navigation/index.screen';
 import CreateNavigation from './pages/navigation/create.screen';
 import EditNavigation from './pages/navigation/edit.screen';
+import IndexWeight from './pages/weight/index.screen';
+import CreateWeight from './pages/weight/create.screen';
+import EditWeight from './pages/weight/edit.screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -40,7 +43,7 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Stack.Navigator initialRouteName="Database">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Login"
           component={Login}
@@ -94,6 +97,21 @@ function App() {
         <Stack.Screen
           name="EditNavigation"
           component={EditNavigation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="IndexWeight"
+          component={IndexWeight}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreateWeight"
+          component={CreateWeight}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditWeight"
+          component={EditWeight}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

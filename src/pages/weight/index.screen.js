@@ -10,9 +10,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-function IndexNavigation(props) {
+function IndexWeight(props) {
   const {route, navigation} = props;
-  const {lantai} = route?.params;
   const [listData, setListData] = useState([]);
   const [isGetLoading, setIsGetLoading] = useState(false);
 
@@ -20,9 +19,7 @@ function IndexNavigation(props) {
     setListData([]);
     setIsGetLoading(true);
     axios
-      .get(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/lantai/${lantai}`,
-      )
+      .get(`https://fine-lime-catfish-vest.cyclic.app/weight`)
       .then(res => {
         setListData(res?.data?.result);
       })
@@ -32,7 +29,7 @@ function IndexNavigation(props) {
       .finally(() => {
         setIsGetLoading(false);
       });
-  }, [route, lantai]);
+  }, [route]);
 
   if (isGetLoading) {
     return (
@@ -54,11 +51,11 @@ function IndexNavigation(props) {
         <Text style={styles.buttonText}>Back</Text>
       </TouchableHighlight>
       <View style={styles.container}>
-        <Text style={styles.title}>Detail Navigation Lantai {lantai}</Text>
+        <Text style={styles.title}>Detail Weight</Text>
         <View style={styles.menu}>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => navigation.navigate('CreateNavigation', {lantai})}
+            onPress={() => navigation.navigate('CreateWeight')}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonText}>Add Data</Text>
           </TouchableHighlight>
@@ -83,17 +80,16 @@ function IndexNavigation(props) {
                         padding: 2,
                         backgroundColor: '#176B87',
                         textAlign: 'center',
+                        marginBottom: 3,
                       }}>
-                      From = {data?.start}, To = {data?.end}
-                    </Text>
-                    <Text style={{color: 'black', textAlign: 'center'}}>
-                      Route = {data?.route}
+                      Weight = {data?.weight}, Active ={' '}
+                      {data?.is_active == 1 ? 'Active' : 'Inactive'}
                     </Text>
                     <TouchableHighlight
                       style={styles.buttonEdit}
                       onPress={() =>
-                        navigation.navigate('EditNavigation', {
-                          navigation_id: data?.navigation_id,
+                        navigation.navigate('EditWeight', {
+                          weight_id: data?.weight_id,
                         })
                       }
                       underlayColor="#176B87">
@@ -105,26 +101,6 @@ function IndexNavigation(props) {
             })
           )}
         </ScrollView>
-        <View style={styles.navbar}>
-          <TouchableHighlight
-            style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexNavigation', {lantai: 1})}
-            underlayColor="#FFCD4B">
-            <Text style={styles.buttonTextNavbar}>Lantai 1</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexNavigation', {lantai: 2})}
-            underlayColor="#FFCD4B">
-            <Text style={styles.buttonTextNavbar}>Lantai 2</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={styles.buttonNavbar}
-            onPress={() => navigation.navigate('IndexNavigation', {lantai: 3})}
-            underlayColor="#FFCD4B">
-            <Text style={styles.buttonTextNavbar}>Lantai 3</Text>
-          </TouchableHighlight>
-        </View>
       </View>
     </>
   );
@@ -236,4 +212,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IndexNavigation;
+export default IndexWeight;

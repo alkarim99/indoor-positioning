@@ -29,10 +29,9 @@ function Database(props) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          // onPress={() => navigation.navigate('DetailDatabase', {lantaiId: 3})}
+          onPress={() => navigation.navigate('IndexWeight')}
           underlayColor="#FFCD4B">
           <Text style={styles.buttonText}>Weight</Text>
-          {/* <Text style={styles.buttonText}>Database Lantai 3</Text> */}
         </TouchableHighlight>
       </View>
     </>

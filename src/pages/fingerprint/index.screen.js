@@ -19,7 +19,6 @@ function IndexFingerprint(props) {
   useEffect(() => {
     setListData([]);
     setIsGetLoading(true);
-    console.log(lantai);
     axios
       .get(
         `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantai}`,
