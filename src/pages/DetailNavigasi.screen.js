@@ -7,7 +7,7 @@ import {
   View,
   TouchableHighlight,
   Image,
-  LogBox,
+  ScrollView,
 } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import wifiReborn from 'react-native-wifi-reborn';
@@ -15,23 +15,61 @@ import {Snackbar} from 'react-native-paper';
 
 function DetailNavigasi(props) {
   const {route, navigation} = props;
-  const {lantaiId} = route.params;
   const [isLoading, setIsLoading] = useState(false);
+  const [lantaiId, setLantaiId] = useState(route.params.lantaiId);
   const [wifiList, setWifiList] = useState([]);
   const [rss, setRss] = useState('');
   const [location, setLocation] = useState('');
-  const listCategory = ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'];
+  const listCategory = {
+    1: [
+      'Ruang A',
+      'Ruang B',
+      'Tangga',
+      'Ruang C',
+      'Ruang D',
+      'Ruang E',
+      'Ruang F',
+      'Pintu Masuk',
+      'Ruang G',
+      'Ruang H',
+    ],
+    2: [
+      'Ruang I',
+      'Ruang J',
+      'Tangga',
+      'Ruang K',
+      'Ruang L',
+      'Ruang M',
+      'Ruang N',
+      'Ruang O',
+      'Ruang P',
+      'Ruang Q',
+    ],
+    3: [
+      'Ruang R',
+      'Ruang S',
+      'Tangga',
+      'Ruang T',
+      'Ruang U',
+      'Ruang V',
+      'Ruang W',
+      'Ruang X',
+      'Ruang Y',
+      'Ruang Z',
+    ],
+  };
 
   const [errorMessages, setErrorMessages] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => {
     getWifiList();
-  }, []);
+    setLantaiId(route.params.lantaiId);
+  }, [route, lantaiId]);
 
   const handleLocateMe = async () => {
     setIsLoading(true);
-    const payload = {rss, lantai_id: lantaiId};
+    const payload = {rss: '9,11,5,2', lantai_id: lantaiId};
     axios
       .post(`https://fine-lime-catfish-vest.cyclic.app/location`, payload)
       .then(res => {
@@ -93,7 +131,7 @@ function DetailNavigasi(props) {
             </TouchableHighlight>
             <SelectDropdown
               defaultButtonText={'Pilihan'}
-              data={listCategory}
+              data={listCategory[lantaiId]}
               onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index);
               }}
@@ -117,15 +155,41 @@ function DetailNavigasi(props) {
             </TouchableHighlight>
           </View>
         </View>
-        <Image source={require('../assets/placeholder.png')} />
+        {location ? <Text>Your location at {location}</Text> : ''}
+        <ScrollView>
+          {lantaiId == 1 ? (
+            <Image
+              style={styles.maps}
+              source={require('../assets/Denah-Lantai-1.png')}
+            />
+          ) : (
+            ''
+          )}
+          {lantaiId == 2 ? (
+            <Image
+              style={styles.maps}
+              source={require('../assets/Denah-Lantai-2.png')}
+            />
+          ) : (
+            ''
+          )}
+          {lantaiId == 3 ? (
+            <Image
+              style={styles.maps}
+              source={require('../assets/Denah-Lantai-3.png')}
+            />
+          ) : (
+            ''
+          )}
+        </ScrollView>
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
           onDismiss={() => {
-            navigation.navigate('DetailNavigasi');
+            navigation.navigate('DetailNavigasi', lantaiId);
           }}
           duration={2000}>
-          Your location at {location}
+          <Text>Your location at {location}</Text>
         </Snackbar>
         <Snackbar
           visible={Boolean(errorMessages)}
@@ -171,6 +235,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     paddingTop: 20,
+  },
+  maps: {
+    width: 340,
+    resizeMode: 'center',
   },
   title: {
     marginBottom: 5,
