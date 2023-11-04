@@ -29,6 +29,7 @@ import EditNavigation from './pages/navigation/edit.screen';
 import IndexWeight from './pages/weight/index.screen';
 import CreateWeight from './pages/weight/create.screen';
 import EditWeight from './pages/weight/edit.screen';
+import CanvasScreen from './pages/canvas.screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -112,6 +113,11 @@ function App() {
         <Stack.Screen
           name="EditWeight"
           component={EditWeight}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Canvas"
+          component={CanvasScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

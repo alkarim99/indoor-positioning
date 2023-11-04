@@ -1,14 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import wifiReborn from 'react-native-wifi-reborn';
 import {Snackbar} from 'react-native-paper';
@@ -16,7 +9,7 @@ import {Snackbar} from 'react-native-paper';
 function DetailNavigasi(props) {
   const {route, navigation} = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [lantaiId, setLantaiId] = useState(route.params.lantaiId);
+  const [lantaiId, setLantaiId] = useState(route.params.lantaiId ?? 1);
   const [wifiList, setWifiList] = useState([]);
   const [rss, setRss] = useState('');
   const [location, setLocation] = useState('');
@@ -64,18 +57,18 @@ function DetailNavigasi(props) {
 
   useEffect(() => {
     getWifiList();
-    setLantaiId(route.params.lantaiId);
-  }, [route, lantaiId]);
+  }, []);
 
   const handleLocateMe = async () => {
     setIsLoading(true);
+    setLocation('');
     const payload = {rss: '9,11,5,2', lantai_id: lantaiId};
     axios
       .post(`https://fine-lime-catfish-vest.cyclic.app/location`, payload)
       .then(res => {
         setIsSuccess(true);
-        console.log(res?.data?.result);
         setLocation(res?.data?.result?.kNN?.kNNLocation);
+        setLantaiId(lantaiId);
       })
       .catch(error => {
         console.log(error?.response?.data?.message);
@@ -156,32 +149,30 @@ function DetailNavigasi(props) {
           </View>
         </View>
         {location ? <Text>Your location at {location}</Text> : ''}
-        <ScrollView>
-          {lantaiId == 1 ? (
-            <Image
-              style={styles.maps}
-              source={require('../assets/Denah-Lantai-1.png')}
-            />
-          ) : (
-            ''
-          )}
-          {lantaiId == 2 ? (
-            <Image
-              style={styles.maps}
-              source={require('../assets/Denah-Lantai-2.png')}
-            />
-          ) : (
-            ''
-          )}
-          {lantaiId == 3 ? (
-            <Image
-              style={styles.maps}
-              source={require('../assets/Denah-Lantai-3.png')}
-            />
-          ) : (
-            ''
-          )}
-        </ScrollView>
+        {lantaiId == 1 ? (
+          <Image
+            style={styles.maps}
+            source={require('../assets/Denah-Lantai-1.png')}
+          />
+        ) : (
+          ''
+        )}
+        {lantaiId == 2 ? (
+          <Image
+            style={styles.maps}
+            source={require('../assets/Denah-Lantai-2.png')}
+          />
+        ) : (
+          ''
+        )}
+        {lantaiId == 3 ? (
+          <Image
+            style={styles.maps}
+            source={require('../assets/Denah-Lantai-3.png')}
+          />
+        ) : (
+          ''
+        )}
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
@@ -205,19 +196,25 @@ function DetailNavigasi(props) {
         </Snackbar>
         <View style={styles.navbar}>
           <TouchableHighlight
-            style={styles.buttonNavbar}
+            style={
+              lantaiId == 1 ? styles.buttonNavbarActive : styles.buttonNavbar
+            }
             onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 1})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 1</Text>
           </TouchableHighlight>
           <TouchableHighlight
-            style={styles.buttonNavbar}
+            style={
+              lantaiId == 2 ? styles.buttonNavbarActive : styles.buttonNavbar
+            }
             onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 2})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 2</Text>
           </TouchableHighlight>
           <TouchableHighlight
-            style={styles.buttonNavbar}
+            style={
+              lantaiId == 3 ? styles.buttonNavbarActive : styles.buttonNavbar
+            }
             onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 3})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 3</Text>
@@ -237,7 +234,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   maps: {
-    width: 340,
+    width: 360,
+    height: 360,
     resizeMode: 'center',
   },
   title: {
@@ -270,6 +268,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#176B87',
     borderWidth: 1,
     borderColor: '#FFCD4B',
+  },
+  buttonNavbarActive: {
+    width: '35%',
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: '#FFCD4B',
+    borderWidth: 1,
+    borderColor: '#176B87',
   },
   buttonTextNavbar: {
     color: '#fff',

@@ -33,6 +33,12 @@ function Home(props) {
               <Text style={styles.buttonText}>Database</Text>
             </TouchableHighlight>
             <TouchableHighlight
+              style={styles.button}
+              onPress={() => navigation.navigate('Canvas')}
+              underlayColor="#FFCD4B">
+              <Text style={styles.buttonText}>Canvas</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
               style={styles.buttonLogout}
               onPress={() => navigation.navigate('Login')}
               underlayColor="#176B87">
