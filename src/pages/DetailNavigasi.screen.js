@@ -12,52 +12,30 @@ function DetailNavigasi(props) {
   const [lantaiId, setLantaiId] = useState(route.params.lantaiId ?? 1);
   const [wifiList, setWifiList] = useState([]);
   const [rss, setRss] = useState('');
+  const [listRuang, setListRuang] = useState('');
   const [location, setLocation] = useState('');
-  const listCategory = {
-    1: [
-      'Ruang A',
-      'Ruang B',
-      'Tangga',
-      'Ruang C',
-      'Ruang D',
-      'Ruang E',
-      'Ruang F',
-      'Pintu Masuk',
-      'Ruang G',
-      'Ruang H',
-    ],
-    2: [
-      'Ruang I',
-      'Ruang J',
-      'Tangga',
-      'Ruang K',
-      'Ruang L',
-      'Ruang M',
-      'Ruang N',
-      'Ruang O',
-      'Ruang P',
-      'Ruang Q',
-    ],
-    3: [
-      'Ruang R',
-      'Ruang S',
-      'Tangga',
-      'Ruang T',
-      'Ruang U',
-      'Ruang V',
-      'Ruang W',
-      'Ruang X',
-      'Ruang Y',
-      'Ruang Z',
-    ],
-  };
 
   const [errorMessages, setErrorMessages] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => {
     getWifiList();
-  }, []);
+    axios
+      .get(
+        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantaiId}`,
+      )
+      .then(res => {
+        const data = res?.data?.result;
+        let ruang = [];
+        data.map(d => {
+          ruang.push(d.name);
+        });
+        setListRuang(ruang);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [route, lantaiId]);
 
   const handleLocateMe = async () => {
     setIsLoading(true);
@@ -124,7 +102,7 @@ function DetailNavigasi(props) {
             </TouchableHighlight>
             <SelectDropdown
               defaultButtonText={'Pilihan'}
-              data={listCategory[lantaiId]}
+              data={listRuang}
               onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index);
               }}
