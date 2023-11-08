@@ -9,11 +9,13 @@ import {Snackbar} from 'react-native-paper';
 function DetailNavigasi(props) {
   const {route, navigation} = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [lantaiId, setLantaiId] = useState(route.params.lantaiId ?? 1);
+  const [lantaiId, setLantaiId] = useState(route?.params?.lantaiId);
   const [wifiList, setWifiList] = useState([]);
   const [rss, setRss] = useState('');
   const [listRuang, setListRuang] = useState('');
   const [location, setLocation] = useState('');
+  const [end, setEnd] = useState('');
+  const [routeNav, setRouteNav] = useState('');
 
   const [errorMessages, setErrorMessages] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -35,14 +37,14 @@ function DetailNavigasi(props) {
       .catch(error => {
         console.log(error);
       });
-  }, [route, lantaiId]);
+  }, []);
 
   const handleLocateMe = async () => {
     setIsLoading(true);
     setLocation('');
     const payload = {rss: '9,11,5,2', lantai_id: lantaiId};
     axios
-      .post(`https://fine-lime-catfish-vest.cyclic.app/location`, payload)
+      .post('https://fine-lime-catfish-vest.cyclic.app/location', payload)
       .then(res => {
         setIsSuccess(true);
         setLocation(res?.data?.result?.kNN?.kNNLocation);
@@ -66,6 +68,34 @@ function DetailNavigasi(props) {
       });
       setRss(rssList);
     });
+  };
+
+  const handleGo = async () => {
+    console.log(end == '');
+    setIsLoading(true);
+    if (end == '') {
+      setErrorMessages('Please choose your destination!');
+      setIsLoading(false);
+      return;
+    }
+    await handleLocateMe();
+    const payload = {start: location, end, lantai: lantaiId};
+    axios
+      .post(
+        'https://fine-lime-catfish-vest.cyclic.app/navigation/find',
+        payload,
+      )
+      .then(res => {
+        setIsSuccess(true);
+        setRouteNav(res?.data?.result[0].route);
+      })
+      .catch(error => {
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -105,6 +135,7 @@ function DetailNavigasi(props) {
               data={listRuang}
               onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index);
+                setEnd(selectedItem);
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem;
@@ -120,13 +151,35 @@ function DetailNavigasi(props) {
             />
             <TouchableHighlight
               style={styles.submit}
-              // onPress={() => navigation.navigate('Home')}
+              onPress={handleGo}
               underlayColor="#FFCD4B">
               <Text style={styles.submitText}>Go</Text>
             </TouchableHighlight>
           </View>
         </View>
         {location ? <Text>Your location at {location}</Text> : ''}
+        {routeNav ? <Text>Your route {routeNav}</Text> : ''}
+        <Snackbar
+          visible={isSuccess}
+          style={{width: '100%', backgroundColor: '#79C079'}}
+          onDismiss={() => {
+            navigation.navigate('DetailNavigasi', lantaiId);
+          }}
+          duration={2000}>
+          <Text>Your location at {location}</Text>
+        </Snackbar>
+        <Snackbar
+          visible={Boolean(errorMessages)}
+          style={{width: '100%', backgroundColor: '#CB3837'}}
+          onDismiss={() => setErrorMessages(null)}
+          action={{
+            label: 'X',
+            onPress: () => {
+              setErrorMessages(null);
+            },
+          }}>
+          {errorMessages}
+        </Snackbar>
         {lantaiId == 1 ? (
           <Image
             style={styles.maps}
@@ -151,33 +204,12 @@ function DetailNavigasi(props) {
         ) : (
           ''
         )}
-        <Snackbar
-          visible={isSuccess}
-          style={{width: '100%', backgroundColor: '#79C079'}}
-          onDismiss={() => {
-            navigation.navigate('DetailNavigasi', lantaiId);
-          }}
-          duration={2000}>
-          <Text>Your location at {location}</Text>
-        </Snackbar>
-        <Snackbar
-          visible={Boolean(errorMessages)}
-          style={{width: '100%', backgroundColor: '#CB3837'}}
-          onDismiss={() => setErrorMessages(null)}
-          action={{
-            label: 'X',
-            onPress: () => {
-              setErrorMessages(null);
-            },
-          }}>
-          {errorMessages}
-        </Snackbar>
         <View style={styles.navbar}>
           <TouchableHighlight
             style={
               lantaiId == 1 ? styles.buttonNavbarActive : styles.buttonNavbar
             }
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 1})}
+            onPress={() => navigation.push('DetailNavigasi', {lantaiId: 1})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 1</Text>
           </TouchableHighlight>
@@ -185,7 +217,7 @@ function DetailNavigasi(props) {
             style={
               lantaiId == 2 ? styles.buttonNavbarActive : styles.buttonNavbar
             }
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 2})}
+            onPress={() => navigation.push('DetailNavigasi', {lantaiId: 2})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 2</Text>
           </TouchableHighlight>
@@ -193,7 +225,7 @@ function DetailNavigasi(props) {
             style={
               lantaiId == 3 ? styles.buttonNavbarActive : styles.buttonNavbar
             }
-            onPress={() => navigation.navigate('DetailNavigasi', {lantaiId: 3})}
+            onPress={() => navigation.push('DetailNavigasi', {lantaiId: 3})}
             underlayColor="#FFCD4B">
             <Text style={styles.buttonTextNavbar}>Lantai 3</Text>
           </TouchableHighlight>
