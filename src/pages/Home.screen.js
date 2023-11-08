@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -8,10 +8,51 @@ import {
   TouchableHighlight,
   ScrollView,
   SafeAreaView,
+  PermissionsAndroid,
 } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {addAuth} from '../store/reducers/authSlice';
 
 function Home(props) {
   const {navigation} = props;
+  const state = useSelector(state => state);
+  const dispatch = useDispatch();
+  const user = state?.authSlice?.userData;
+  const token = state?.authSlice?.token;
+
+  useEffect(() => {
+    permission();
+  });
+  const permission = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Location permission is required for WiFi connections',
+        message:
+          'This app needs location permission as this is required  ' +
+          'to scan for wifi networks.',
+        buttonNegative: 'DENY',
+        buttonPositive: 'ALLOW',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      // You can now use react-native-wifi-reborn
+      console.log('granted');
+    } else {
+      // Permission denied
+      console.log('not granted');
+    }
+  };
+
+  const handleLogout = () => {
+    dispatch(
+      addAuth({
+        userData: {},
+        token: '',
+      }),
+    );
+    navigation.navigate('Home');
+  };
 
   return (
     <>
@@ -20,30 +61,65 @@ function Home(props) {
           <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <Text style={styles.title}>Indoor Positioning</Text>
+            {token != '' ? (
+              <Text style={styles.subtitle}>Welcome, {user?.full_name}</Text>
+            ) : (
+              ''
+            )}
+
             <TouchableHighlight
-              style={styles.button}
+              style={{...styles.button, marginTop: 15}}
               onPress={() => navigation.navigate('Navigasi')}
               underlayColor="#FFCD4B">
               <Text style={styles.buttonText}>Navigasi</Text>
             </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.button}
-              onPress={() => navigation.navigate('Database')}
-              underlayColor="#FFCD4B">
-              <Text style={styles.buttonText}>Database</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.button}
-              onPress={() => navigation.navigate('Canvas')}
-              underlayColor="#FFCD4B">
-              <Text style={styles.buttonText}>Canvas</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
+
+            {user?.role == 'admin' ? (
+              <>
+                <TouchableHighlight
+                  style={styles.button}
+                  onPress={() => navigation.navigate('Database')}
+                  underlayColor="#FFCD4B">
+                  <Text style={styles.buttonText}>Database</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={styles.button}
+                  onPress={() => navigation.navigate('Canvas')}
+                  underlayColor="#FFCD4B">
+                  <Text style={styles.buttonText}>Canvas</Text>
+                </TouchableHighlight>
+              </>
+            ) : (
+              ''
+            )}
+
+            {token != '' ? (
+              <TouchableHighlight
+                style={styles.buttonLogout}
+                onPress={handleLogout}
+                underlayColor="#176B87">
+                <Text style={styles.buttonText}>Logout</Text>
+              </TouchableHighlight>
+            ) : (
+              <TouchableHighlight
+                style={styles.buttonLogout}
+                onPress={() => navigation.navigate('Login')}
+                underlayColor="#176B87">
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableHighlight>
+            )}
+            {/* <TouchableHighlight
               style={styles.buttonLogout}
               onPress={() => navigation.navigate('Login')}
               underlayColor="#176B87">
-              <Text style={styles.buttonText}>Logout</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.buttonLogout}
+              onPress={handleLogout}
+              underlayColor="#176B87">
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableHighlight> */}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -64,7 +140,11 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 38,
     fontWeight: 'bold',
-    marginBottom: 15,
+  },
+  subtitle: {
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 20,
   },
   button: {
     paddingTop: 10,

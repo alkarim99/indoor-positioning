@@ -9,9 +9,13 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {StatusBar, useColorScheme} from 'react-native';
+import {StatusBar} from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {store} from './store/index';
+import {Provider, useSelector} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistStore} from 'redux-persist';
+import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,96 +36,113 @@ import EditWeight from './pages/weight/edit.screen';
 import CanvasScreen from './pages/canvas.screen';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  let persistor = persistStore(store);
 
   return (
-    <NavigationContainer>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Navigasi"
-          component={Navigasi}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DetailNavigasi"
-          component={DetailNavigasi}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Database"
-          component={Database}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="IndexFingerprint"
-          component={IndexFingerprint}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CreateFingerprint"
-          component={CreateFingerprint}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditFingerprint"
-          component={EditFingerprint}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="IndexNavigation"
-          component={IndexNavigation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CreateNavigation"
-          component={CreateNavigation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditNavigation"
-          component={EditNavigation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="IndexWeight"
-          component={IndexWeight}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CreateWeight"
-          component={CreateWeight}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditWeight"
-          component={EditWeight}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Canvas"
-          component={CanvasScreen}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <RunApp persistor={persistor}></RunApp>
+    </Provider>
+  );
+}
+
+function RunApp({persistor}) {
+  const state = useSelector(state => state);
+  axios.interceptors.request.use(
+    config => {
+      if (state?.authSlice?.token != '') {
+        config.headers['Authorization'] = `Bearer ${state?.authSlice?.token}`;
+      }
+      return config;
+    },
+    error => {
+      console.log(error);
+      Promise.reject(error);
+    },
+  );
+
+  return (
+    <PersistGate loading={null} persistor={persistor}>
+      <NavigationContainer>
+        <StatusBar barStyle={'dark-content'} />
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Navigasi"
+            component={Navigasi}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailNavigasi"
+            component={DetailNavigasi}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Database"
+            component={Database}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="IndexFingerprint"
+            component={IndexFingerprint}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateFingerprint"
+            component={CreateFingerprint}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditFingerprint"
+            component={EditFingerprint}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="IndexNavigation"
+            component={IndexNavigation}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateNavigation"
+            component={CreateNavigation}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditNavigation"
+            component={EditNavigation}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="IndexWeight"
+            component={IndexWeight}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateWeight"
+            component={CreateWeight}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditWeight"
+            component={EditWeight}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Canvas"
+            component={CanvasScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PersistGate>
   );
 }
 

@@ -12,34 +12,56 @@ import {
   SafeAreaView,
   PermissionsAndroid,
 } from 'react-native';
+import {Snackbar} from 'react-native-paper';
+import axios from 'axios';
+import {useSelector, useDispatch} from 'react-redux';
+import {addAuth} from '../store/reducers/authSlice';
 
 function Login(props) {
   useEffect(() => {
-    permission();
-  });
-  const permission = async () => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'Location permission is required for WiFi connections',
-        message:
-          'This app needs location permission as this is required  ' +
-          'to scan for wifi networks.',
-        buttonNegative: 'DENY',
-        buttonPositive: 'ALLOW',
-      },
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      // You can now use react-native-wifi-reborn
-      console.log('granted');
-    } else {
-      // Permission denied
-      console.log('not granted');
+    if (state?.authSlice?.token != '') {
+      navigation.navigate('Home');
     }
-  };
+  });
 
   const {navigation} = props;
+  const state = useSelector(state => state);
+  const dispatch = useDispatch();
   const listCategory = ['Staff', 'Pengunjung'];
+
+  const [email, onChangeEmail] = React.useState('');
+  const [password, onChangePassword] = React.useState('');
+  const [errorMessages, setErrorMessages] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
+
+  const handleLogin = () => {
+    setIsLoading(true);
+    axios
+      .post('https://fine-lime-catfish-vest.cyclic.app/auth/login', {
+        email: email,
+        password: password,
+      })
+      .then(response => {
+        console.log(response);
+        const profile = response?.data?.data;
+        const token = response?.data?.token;
+        dispatch(
+          addAuth({
+            userData: profile,
+            token,
+          }),
+        );
+        setIsSuccess(true);
+      })
+      .catch(error => {
+        console.log(error?.response?.data?.message);
+        setErrorMessages(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -49,18 +71,18 @@ function Login(props) {
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TextInput
               style={styles.input}
-              // onChangeText=""
-              // value=""
-              placeholder="Name"
+              onChangeText={onChangeEmail}
+              value={email}
+              placeholder="Email"
             />
             <TextInput
               style={styles.input}
-              // onChangeText=""
-              // value=""
-              placeholder="Phone Number"
-              keyboardType="numeric"
+              onChangeText={onChangePassword}
+              value={password}
+              secureTextEntry={true}
+              placeholder="Password"
             />
-            <SelectDropdown
+            {/* <SelectDropdown
               defaultButtonText={'Pilihan'}
               data={listCategory}
               onSelect={(selectedItem, index) => {
@@ -77,14 +99,37 @@ function Login(props) {
               dropdownStyle={styles.dropdown2DropdownStyle}
               rowStyle={styles.dropdown2RowStyle}
               rowTextStyle={styles.dropdown2RowTxtStyle}
-            />
+            /> */}
             <TouchableHighlight
               style={styles.submit}
-              onPress={() => navigation.navigate('Home')}
+              onPress={handleLogin}
+              disabled={isLoading}
               underlayColor="#FFCD4B">
-              <Text style={styles.submitText}>Login</Text>
+              <Text style={styles.submitText}>
+                {isLoading ? 'Loading...' : 'LOG IN'}
+              </Text>
             </TouchableHighlight>
           </View>
+          <Snackbar
+            visible={isSuccess}
+            style={{backgroundColor: '#79C079'}}
+            onDismiss={() => navigation.navigate('Home')}
+            duration={2000}>
+            Login success
+          </Snackbar>
+
+          <Snackbar
+            visible={Boolean(errorMessages)}
+            style={{backgroundColor: '#CB3837'}}
+            onDismiss={() => setErrorMessages(null)}
+            action={{
+              label: 'X',
+              onPress: () => {
+                setErrorMessages(null);
+              },
+            }}>
+            {errorMessages}
+          </Snackbar>
         </ScrollView>
       </SafeAreaView>
     </>
