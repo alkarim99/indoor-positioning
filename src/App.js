@@ -19,7 +19,8 @@ import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 
-import Login from './pages/Login.screen';
+import Login from './pages/auth/Login.screen';
+import Register from './pages/auth/Register.screen';
 import Home from './pages/Home.screen';
 import Navigasi from './pages/Navigasi.screen';
 import Database from './pages/Database.screen';
@@ -34,6 +35,7 @@ import IndexWeight from './pages/weight/index.screen';
 import CreateWeight from './pages/weight/create.screen';
 import EditWeight from './pages/weight/edit.screen';
 import CanvasScreen from './pages/canvas.screen';
+import Profile from './pages/Profile.screen';
 
 function App() {
   let persistor = persistStore(store);
@@ -138,6 +140,16 @@ function RunApp({persistor}) {
           <Stack.Screen
             name="Canvas"
             component={CanvasScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

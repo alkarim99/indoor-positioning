@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect} from 'react';
-import SelectDropdown from 'react-native-select-dropdown';
 import {
   Image,
   StyleSheet,
@@ -10,12 +9,11 @@ import {
   TouchableHighlight,
   ScrollView,
   SafeAreaView,
-  PermissionsAndroid,
 } from 'react-native';
 import {Snackbar} from 'react-native-paper';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
-import {addAuth} from '../store/reducers/authSlice';
+import {addAuth} from '../../store/reducers/authSlice';
 
 function Login(props) {
   useEffect(() => {
@@ -27,7 +25,6 @@ function Login(props) {
   const {navigation} = props;
   const state = useSelector(state => state);
   const dispatch = useDispatch();
-  const listCategory = ['Staff', 'Pengunjung'];
 
   const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
@@ -39,11 +36,10 @@ function Login(props) {
     setIsLoading(true);
     axios
       .post('https://fine-lime-catfish-vest.cyclic.app/auth/login', {
-        email: email,
-        password: password,
+        email,
+        password,
       })
       .then(response => {
-        console.log(response);
         const profile = response?.data?.data;
         const token = response?.data?.token;
         dispatch(
@@ -68,7 +64,10 @@ function Login(props) {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.form}>
-            <Image style={styles.logo} source={require('../assets/logo.png')} />
+            <Image
+              style={styles.logo}
+              source={require('../../assets/logo.png')}
+            />
             <TextInput
               style={styles.input}
               onChangeText={onChangeEmail}
@@ -82,24 +81,6 @@ function Login(props) {
               secureTextEntry={true}
               placeholder="Password"
             />
-            {/* <SelectDropdown
-              defaultButtonText={'Pilihan'}
-              data={listCategory}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              buttonStyle={styles.dropdown2BtnStyle}
-              buttonTextStyle={styles.dropdown2BtnTxtStyle}
-              dropdownStyle={styles.dropdown2DropdownStyle}
-              rowStyle={styles.dropdown2RowStyle}
-              rowTextStyle={styles.dropdown2RowTxtStyle}
-            /> */}
             <TouchableHighlight
               style={styles.submit}
               onPress={handleLogin}
@@ -108,6 +89,22 @@ function Login(props) {
               <Text style={styles.submitText}>
                 {isLoading ? 'Loading...' : 'LOG IN'}
               </Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.buttonSecond}
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
+              underlayColor="#FFCD4B">
+              <Text style={styles.submitText}>Register</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.buttonSecond}
+              onPress={() => {
+                navigation.navigate('Home');
+              }}
+              underlayColor="#FFCD4B">
+              <Text style={styles.submitText}>Back</Text>
             </TouchableHighlight>
           </View>
           <Snackbar
@@ -141,7 +138,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 350,
+    width: '100%',
     resizeMode: 'center',
   },
   input: {
@@ -183,10 +180,18 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: '#176B87',
     borderRadius: 30,
+    marginBottom: 12,
   },
   submitText: {
     color: '#fff',
     textAlign: 'center',
+  },
+  buttonSecond: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#FFCD4B',
+    borderRadius: 30,
+    marginBottom: 12,
   },
 });
 

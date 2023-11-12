@@ -94,32 +94,36 @@ function Home(props) {
             )}
 
             {token != '' ? (
-              <TouchableHighlight
-                style={styles.buttonLogout}
-                onPress={handleLogout}
-                underlayColor="#176B87">
-                <Text style={styles.buttonText}>Logout</Text>
-              </TouchableHighlight>
+              <>
+                <TouchableHighlight
+                  style={styles.button}
+                  onPress={() => navigation.navigate('Profile')}
+                  underlayColor="#FFCD4B">
+                  <Text style={styles.buttonText}>Profile</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={styles.buttonSecond}
+                  onPress={handleLogout}
+                  underlayColor="#176B87">
+                  <Text style={styles.buttonText}>Logout</Text>
+                </TouchableHighlight>
+              </>
             ) : (
-              <TouchableHighlight
-                style={styles.buttonLogout}
-                onPress={() => navigation.navigate('Login')}
-                underlayColor="#176B87">
-                <Text style={styles.buttonText}>Login</Text>
-              </TouchableHighlight>
+              <>
+                <TouchableHighlight
+                  style={styles.buttonSecond}
+                  onPress={() => navigation.navigate('Login')}
+                  underlayColor="#176B87">
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={styles.buttonSecond}
+                  onPress={() => navigation.navigate('Register')}
+                  underlayColor="#176B87">
+                  <Text style={styles.buttonText}>Register</Text>
+                </TouchableHighlight>
+              </>
             )}
-            {/* <TouchableHighlight
-              style={styles.buttonLogout}
-              onPress={() => navigation.navigate('Login')}
-              underlayColor="#176B87">
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.buttonLogout}
-              onPress={handleLogout}
-              underlayColor="#176B87">
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableHighlight> */}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 340,
+    width: '100%',
     resizeMode: 'center',
   },
   title: {
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginBottom: 12,
   },
-  buttonLogout: {
+  buttonSecond: {
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#FFCD4B',

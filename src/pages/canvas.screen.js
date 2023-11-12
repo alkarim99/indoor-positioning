@@ -6,7 +6,8 @@ import {
   View,
   TouchableHighlight,
   SafeAreaView,
-  Alert,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import Canvas from 'react-native-canvas';
 
@@ -30,12 +31,12 @@ function CanvasScreen(props) {
   // };
 
   const drawLine = () => {
-    const route = '(30,30); (30,20); (10,20); (10,30)';
+    const route = '(200,200); (150,150)';
     const coordinate = route.split(';');
     console.log(coordinate[0]);
 
     const ctx = ref.current.getContext('2d');
-    ctx.strokeStyle = 'yellow';
+    ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
 
     ctx.beginPath();
@@ -50,23 +51,11 @@ function CanvasScreen(props) {
         .replace('(', '')
         .replace(')', '')
         .split(',');
-      console.log(index);
-      console.log(move);
-      console.log(line);
       ctx.moveTo(move[0], move[1]); // Begin first sub-path
       ctx.lineTo(line[0], line[1]);
+      ctx.lineWidth = 10;
     }
     ctx.stroke();
-  };
-
-  const drawLine2 = () => {
-    const ctx2 = ref.current.getContext('2d');
-    ctx2.beginPath();
-    ctx2.moveTo(10, 20);
-    ctx2.lineTo(10, 300);
-    ctx2.strokeStyle = 'red';
-    ctx2.lineWidth = 5;
-    ctx2.stroke();
   };
 
   return (
@@ -79,11 +68,17 @@ function CanvasScreen(props) {
           <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
       </View>
-      <SafeAreaView style={{flex: 1}}>
-        <Canvas
-          ref={ref}
-          style={{width: '100%', height: '100%', backgroundColor: 'black'}}
-        />
+      <SafeAreaView style={styles.container}>
+        {/* <Image
+          style={styles.maps}
+          source={require('../assets/Denah-Lantai-1.png')}
+        /> */}
+        <ImageBackground
+          source={require('../assets/Denah-Lantai-1.png')}
+          resizeMode="cover"
+          style={{justifyContent: 'center', width: '100%', height: 300}}>
+          <Canvas ref={ref} />
+        </ImageBackground>
       </SafeAreaView>
     </>
   );
@@ -101,6 +96,19 @@ const styles = {
   buttonText: {
     color: '#fff',
     textAlign: 'center',
+  },
+  maps: {
+    width: '100%',
+    height: 360,
+    resizeMode: 'center',
+    position: 'absolute',
+  },
+  container: {
+    flex: 1,
+  },
+  canvas: {
+    position: 'absolute',
+    margin: 50,
   },
 };
 
