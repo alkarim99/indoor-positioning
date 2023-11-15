@@ -10,6 +10,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import Canvas from 'react-native-canvas';
+import {yellow100} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 function CanvasScreen(props) {
   const ref = useRef(null);
@@ -18,26 +19,16 @@ function CanvasScreen(props) {
   useEffect(() => {
     if (ref.current) {
       const ctx = ref.current.getContext('2d');
-      drawLine(ctx);
-      // drawLine2(ctx);
+      drawLine3(ctx);
     }
   }, [ref]);
 
-  // const handleCanvas = canvas => {
-  //   const ctx = canvas.getContext('2d');
-  //   ctx.fillStyle = 'purple';
-  //   ctx.fillRect(0, 0, 100, 100);
-  //   const ctx2 = canvas.getContext('2d');
-  // };
-
   const drawLine = () => {
-    const route = '(200,200); (150,150)';
+    const route = '(0,0); (10, 10); (40,40); (20,4)';
     const coordinate = route.split(';');
-    console.log(coordinate[0]);
 
     const ctx = ref.current.getContext('2d');
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = 1;
 
     ctx.beginPath();
     for (let index = 0; index < coordinate.length - 1; index++) {
@@ -51,33 +42,84 @@ function CanvasScreen(props) {
         .replace('(', '')
         .replace(')', '')
         .split(',');
-      ctx.moveTo(move[0], move[1]); // Begin first sub-path
-      ctx.lineTo(line[0], line[1]);
-      ctx.lineWidth = 10;
+      ctx.moveTo(move[0] * 5, move[1] * 5); // Begin first sub-path
+      ctx.lineTo(line[0] * 5, line[1] * 5);
     }
+    ctx.lineWidth = 10;
+    ctx.stroke();
+  };
+
+  const drawLine2 = () => {
+    const ctx = ref.current.getContext('2d');
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(0, 75);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(150, 0);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(300, 0);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(300, 75);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(300, 150);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(150, 150);
+    ctx.lineTo(150, 75);
+    ctx.moveTo(0, 150);
+    ctx.lineTo(150, 75);
+    ctx.lineWidth = 10;
+    ctx.stroke();
+  };
+
+  const drawLine3 = () => {
+    const ctx = ref.current.getContext('2d');
+    ctx.strokeStyle = 'red';
+    ctx.fillStyle = 'black';
+    ctx.font = 'bold 16px Arial';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 75); // first path
+    ctx.fillText('1', 0 + 5, 75 - 25);
+    ctx.moveTo(0, 75);
+    ctx.lineTo(75, 75); // third path
+    ctx.fillText('2', 75 - 20, 75 + 20);
+    ctx.moveTo(75, 75);
+    ctx.lineTo(75, 0); // second path
+    ctx.fillText('3', 75 + 5, 75 - 25);
+    ctx.closePath();
+    ctx.lineWidth = 5;
     ctx.stroke();
   };
 
   return (
     <>
-      <View>
-        <TouchableHighlight
-          style={styles.buttonMenu}
-          onPress={() => navigation.navigate('Home')}
-          underlayColor="#176B87">
-          <Text style={styles.buttonText}>Back</Text>
-        </TouchableHighlight>
-      </View>
+      <TouchableHighlight
+        style={styles.buttonMenu}
+        onPress={() => navigation.navigate('Home')}
+        underlayColor="#176B87">
+        <Text style={styles.buttonText}>Back</Text>
+      </TouchableHighlight>
       <SafeAreaView style={styles.container}>
-        {/* <Image
-          style={styles.maps}
-          source={require('../assets/Denah-Lantai-1.png')}
-        /> */}
         <ImageBackground
           source={require('../assets/Denah-Lantai-1.png')}
           resizeMode="cover"
-          style={{justifyContent: 'center', width: '100%', height: 300}}>
-          <Canvas ref={ref} />
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: 300,
+          }}>
+          <Canvas
+            ref={ref}
+            style={{
+              width: 300,
+              height: 150,
+              marginTop: 10,
+              // backgroundColor: 'yellow',
+            }}
+          />
         </ImageBackground>
       </SafeAreaView>
     </>
@@ -86,12 +128,11 @@ function CanvasScreen(props) {
 
 const styles = {
   buttonMenu: {
-    width: '85%',
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#FFCD4B',
     borderRadius: 30,
-    marginBottom: 12,
+    margin: 12,
   },
   buttonText: {
     color: '#fff',
@@ -104,11 +145,7 @@ const styles = {
     position: 'absolute',
   },
   container: {
-    flex: 1,
-  },
-  canvas: {
-    position: 'absolute',
-    margin: 50,
+    marginTop: 100,
   },
 };
 

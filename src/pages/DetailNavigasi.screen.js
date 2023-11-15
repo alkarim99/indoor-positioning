@@ -1,12 +1,21 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
-import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import wifiReborn from 'react-native-wifi-reborn';
 import {Snackbar} from 'react-native-paper';
+import Canvas from 'react-native-canvas';
 
 function DetailNavigasi(props) {
+  const ref = useRef(null);
   const {route, navigation} = props;
   const [isLoading, setIsLoading] = useState(false);
   const [lantaiId, setLantaiId] = useState(route?.params?.lantaiId);
@@ -21,6 +30,10 @@ function DetailNavigasi(props) {
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => {
+    if (ref.current) {
+      const ctx = ref.current.getContext('2d');
+      drawLine(ctx);
+    }
     getWifiList();
     axios
       .get(
@@ -37,7 +50,7 @@ function DetailNavigasi(props) {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [ref, lantaiId]);
 
   const handleLocateMe = async () => {
     setIsLoading(true);
@@ -96,6 +109,35 @@ function DetailNavigasi(props) {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const drawLine = () => {
+    const path = '(30,30); (30,20); (10,20); (10,30)';
+    const path2 = '(400,150); (400,100); (50,100); (50,150)';
+    const coordinate = path.split(';');
+    console.log(coordinate[0]);
+
+    const ctx = ref.current.getContext('2d');
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    for (let index = 0; index < coordinate.length - 1; index++) {
+      const move = coordinate[index]
+        .replace(' ', '')
+        .replace('(', '')
+        .replace(')', '')
+        .split(',');
+      const line = coordinate[index + 1]
+        .replace(' ', '')
+        .replace('(', '')
+        .replace(')', '')
+        .split(',');
+      ctx.moveTo(move[0] * 5, move[1] * 5); // Begin first sub-path
+      ctx.lineTo(line[0] * 5, line[1] * 5);
+    }
+    ctx.lineWidth = 10;
+    ctx.stroke();
   };
 
   return (
@@ -181,10 +223,16 @@ function DetailNavigasi(props) {
           {errorMessages}
         </Snackbar>
         {lantaiId == 1 ? (
-          <Image
-            style={styles.maps}
+          // <Image
+          //   style={styles.maps}
+          //   source={require('../assets/Denah-Lantai-1.png')}
+          // />
+          <ImageBackground
             source={require('../assets/Denah-Lantai-1.png')}
-          />
+            resizeMode="cover"
+            style={{justifyContent: 'center', width: '100%', height: 300}}>
+            <Canvas ref={ref} style={{width: '100%', height: 300}} />
+          </ImageBackground>
         ) : (
           ''
         )}
