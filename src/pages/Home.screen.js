@@ -82,12 +82,12 @@ function Home(props) {
                   underlayColor="#FFCD4B">
                   <Text style={styles.buttonText}>Database</Text>
                 </TouchableHighlight>
-                <TouchableHighlight
+                {/* <TouchableHighlight
                   style={styles.button}
                   onPress={() => navigation.navigate('Canvas')}
                   underlayColor="#FFCD4B">
                   <Text style={styles.buttonText}>Canvas</Text>
-                </TouchableHighlight>
+                </TouchableHighlight> */}
               </>
             ) : (
               ''

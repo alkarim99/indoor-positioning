@@ -130,7 +130,6 @@ function DetailNavigasi(props) {
         .replace(')', '')
         .split(',');
       ctx.lineTo(line[0], line[1]);
-      console.log(index);
     }
 
     ctx.closePath();
