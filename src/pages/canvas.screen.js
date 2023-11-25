@@ -161,7 +161,6 @@ function CanvasScreen(props) {
               width: 300,
               height: 150,
               marginTop: 10,
-              // backgroundColor: 'yellow',
             }}
           />
         </ImageBackground>

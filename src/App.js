@@ -48,7 +48,7 @@ function App() {
 }
 
 function RunApp({persistor}) {
-  const state = useSelector(state => state);
+  const state = useSelector(state => state);``
   axios.interceptors.request.use(
     config => {
       if (state?.authSlice?.token != '') {

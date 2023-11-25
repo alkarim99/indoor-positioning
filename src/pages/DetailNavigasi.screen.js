@@ -30,10 +30,6 @@ function DetailNavigasi(props) {
   const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => {
-    if (ref.current) {
-      const ctx = ref.current.getContext('2d');
-      drawLine(ctx);
-    }
     getWifiList();
     axios
       .get(
@@ -84,14 +80,12 @@ function DetailNavigasi(props) {
   };
 
   const handleGo = async () => {
-    console.log(end == '');
     setIsLoading(true);
-    if (end == '') {
-      setErrorMessages('Please choose your destination!');
+    if (location == '' && end == '') {
+      setErrorMessages('Please choose your start and destination!');
       setIsLoading(false);
       return;
     }
-    await handleLocateMe();
     const payload = {start: location, end, lantai: lantaiId};
     axios
       .post(
@@ -101,6 +95,7 @@ function DetailNavigasi(props) {
       .then(res => {
         setIsSuccess(true);
         setRouteNav(res?.data?.result[0].route);
+        drawLine();
       })
       .catch(error => {
         console.log(error?.response?.data?.message);
@@ -112,7 +107,8 @@ function DetailNavigasi(props) {
   };
 
   const drawLine = () => {
-    const path = '(0, 150); (0, 75); (0, 0)';
+    // const path = '(0, 150); (0, 75); (0, 0)';
+    const path = routeNav;
     const coordinate = path.split(';');
 
     const ctx = ref.current.getContext('2d');
@@ -120,16 +116,6 @@ function DetailNavigasi(props) {
     ctx.fillStyle = 'black';
     ctx.font = 'bold 16px Arial';
     ctx.beginPath();
-
-    // ctx.moveTo(0, 0);
-    // ctx.lineTo(0, 75); // first path
-    // ctx.fillText('1', 0 + 5, 75 - 25);
-    // ctx.moveTo(0, 75);
-    // ctx.lineTo(150, 75); // second path
-    // ctx.fillText('2', 150 - 20, 75 + 20);
-    // ctx.moveTo(150, 75);
-    // ctx.lineTo(150, 0); // third path
-    // ctx.fillText('3', 150 + 5, 0 + 25);
 
     for (let index = 0; index < coordinate.length - 1; index++) {
       const move = coordinate[index]
@@ -144,22 +130,7 @@ function DetailNavigasi(props) {
         .replace(')', '')
         .split(',');
       ctx.lineTo(line[0], line[1]);
-      // switch (index) {
-      //   case 0:
-      //     ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) - 25);
-      //     break;
-
-      //   case 1:
-      //     ctx.fillText('2', parseInt(line[0]) + 5, parseInt(line[1]) - 25);
-      //     break;
-
-      //   case 2:
-      //     ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 25);
-      //     break;
-
-      //   default:
-      //     break;
-      // }
+      console.log(index);
     }
 
     ctx.closePath();
@@ -203,7 +174,6 @@ function DetailNavigasi(props) {
               defaultButtonText={'Pilihan'}
               data={listRuang}
               onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
                 setEnd(selectedItem);
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
@@ -228,6 +198,7 @@ function DetailNavigasi(props) {
         </View>
         {location ? <Text>Your location at {location}</Text> : ''}
         {routeNav ? <Text>Your route {routeNav}</Text> : ''}
+        {errorMessages ? <Text>{errorMessages}</Text> : ''}
         <Snackbar
           visible={isSuccess}
           style={{width: '100%', backgroundColor: '#79C079'}}
@@ -257,25 +228,76 @@ function DetailNavigasi(props) {
           <ImageBackground
             source={require('../assets/Denah-Lantai-1.png')}
             resizeMode="cover"
-            style={{justifyContent: 'center', width: '100%', height: 300}}>
-            <Canvas ref={ref} style={{width: '100%', height: 300}} />
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: 300,
+            }}>
+            <Canvas
+              ref={ref}
+              style={{
+                width: 300,
+                height: 150,
+                marginTop: 10,
+                // backgroundColor: 'yellow',
+              }}
+            />
           </ImageBackground>
         ) : (
           ''
         )}
         {lantaiId == 2 ? (
-          <Image
-            style={styles.maps}
+          // <Image
+          //   style={styles.maps}
+          //   source={require('../assets/Denah-Lantai-2.png')}
+          // />
+          <ImageBackground
             source={require('../assets/Denah-Lantai-2.png')}
-          />
+            resizeMode="cover"
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: 300,
+            }}>
+            <Canvas
+              ref={ref}
+              style={{
+                width: 300,
+                height: 150,
+                marginTop: 10,
+                // backgroundColor: 'yellow',
+              }}
+            />
+          </ImageBackground>
         ) : (
           ''
         )}
         {lantaiId == 3 ? (
-          <Image
-            style={styles.maps}
+          // <Image
+          //   style={styles.maps}
+          //   source={require('../assets/Denah-Lantai-3.png')}
+          // />
+          <ImageBackground
             source={require('../assets/Denah-Lantai-3.png')}
-          />
+            resizeMode="cover"
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: 300,
+            }}>
+            <Canvas
+              ref={ref}
+              style={{
+                width: 300,
+                height: 150,
+                marginTop: 10,
+                // backgroundColor: 'yellow',
+              }}
+            />
+          </ImageBackground>
         ) : (
           ''
         )}
