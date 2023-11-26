@@ -130,6 +130,34 @@ function DetailNavigasi(props) {
         .replace(')', '')
         .split(',');
       ctx.lineTo(line[0], line[1]);
+      switch (index) {
+        case 0:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) - 35);
+          } else {
+            ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) + 35);
+          }
+          break;
+
+        case 1:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('2', parseInt(line[0]) + 25, parseInt(line[1]) - 5);
+          } else {
+            ctx.fillText('2', parseInt(line[0]) - 15, parseInt(line[1]) + 20);
+          }
+          break;
+
+        case 2:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 25);
+          } else {
+            ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 0);
+          }
+          break;
+
+        default:
+          break;
+      }
     }
 
     ctx.closePath();

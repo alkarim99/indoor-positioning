@@ -75,15 +75,25 @@ function CanvasScreen(props) {
 
   const drawLine3 = () => {
     const ctx = ref.current.getContext('2d');
-    const path = '(0, 150); (0, 75); (0, 0)';
-    // const path = '(0, 150); (0, 75); (75, 75); (75, 0)';
-    // const path = '(0, 150); (0, 75); (150, 75); (150, 0)';
-    // const path = '(0, 150); (0, 75); (225, 75); (225, 0)';
-    // const path = '(0, 150); (0, 75); (285, 75); (285, 0)';
-    // const path = '(0, 150); (0, 75); (285, 75); (285, 150)';
-    // const path = '(0, 150); (0, 75); (225, 75); (225, 150)';
-    // const path = '(0, 150); (0, 75); (150, 75); (150, 150)';
-    // const path = '(0, 150); (0, 75); (75, 75); (75, 150)';
+    // const path = '(0, 0); (0, 75); (75, 75); (75, 0)';
+    // const path = '(0, 0); (0, 75); (150, 75); (150, 0)';
+    // const path = '(0, 0); (0, 75); (225, 75); (225, 0)';
+    // const path = '(0, 0); (0, 75); (285, 75); (285, 0)';
+    // const path = '(0, 0); (0, 75); (285, 75); (285, 150)';
+    // const path = '(0, 0); (0, 75); (225, 75); (225, 150)';
+    // const path = '(0, 0); (0, 75); (150, 75); (150, 150)';
+    // const path = '(0, 0); (0, 75); (75, 75); (75, 150)';
+    // const path = '(0, 0); (0, 75); (0, 150)';
+
+    // const path = '(75, 150); (75, 75); (0, 75); (0, 0)';
+    // const path = '(75, 150); (75, 75); (75, 0)';
+    // const path = '(75, 150); (75, 75); (150, 75); (150, 0)';
+    // const path = '(75, 150); (75, 75); (225, 75); (225, 0)';
+    // const path = '(75, 150); (75, 75); (285, 75); (285, 0)';
+    const path = '(75, 150); (75, 75); (285, 75); (285, 150)';
+    // const path = '(75, 150); (75, 75); (225, 75); (225, 150)';
+    // const path = '(75, 150); (75, 75); (150, 75); (150, 150)';
+    // const path = '(75, 150); (75, 75); (0, 75); (0, 150)';
     const coordinate = path.split(';');
 
     ctx.strokeStyle = 'red';
@@ -114,22 +124,34 @@ function CanvasScreen(props) {
         .replace(')', '')
         .split(',');
       ctx.lineTo(line[0], line[1]);
-      // switch (index) {
-      //   case 0:
-      //     ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) - 25);
-      //     break;
+      switch (index) {
+        case 0:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) - 35);
+          } else {
+            ctx.fillText('1', parseInt(line[0]) + 5, parseInt(line[1]) + 35);
+          }
+          break;
 
-      //   case 1:
-      //     ctx.fillText('2', parseInt(line[0]) + 5, parseInt(line[1]) - 25);
-      //     break;
+        case 1:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('2', parseInt(line[0]) + 25, parseInt(line[1]) - 5);
+          } else {
+            ctx.fillText('2', parseInt(line[0]) - 15, parseInt(line[1]) + 20);
+          }
+          break;
 
-      //   case 2:
-      //     ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 25);
-      //     break;
+        case 2:
+          if (parseInt(line[0]) < 75 || parseInt(line[1]) < 75) {
+            ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 25);
+          } else {
+            ctx.fillText('3', parseInt(line[0]) + 5, parseInt(line[1]) + 0);
+          }
+          break;
 
-      //   default:
-      //     break;
-      // }
+        default:
+          break;
+      }
     }
 
     ctx.closePath();
