@@ -21,7 +21,7 @@ function IndexNavigation(props) {
     setIsGetLoading(true);
     axios
       .get(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/lantai/${lantai}`,
+        `https://api-indoor-positioning.vercel.app/navigation/lantai/${lantai}`,
       )
       .then(res => {
         setListData(res?.data?.result);

@@ -19,7 +19,7 @@ function IndexWeight(props) {
     setListData([]);
     setIsGetLoading(true);
     axios
-      .get(`https://fine-lime-catfish-vest.cyclic.app/weight`)
+      .get(`https://api-indoor-positioning.vercel.app/weight`)
       .then(res => {
         setListData(res?.data?.result);
       })

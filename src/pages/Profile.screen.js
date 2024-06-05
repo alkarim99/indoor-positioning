@@ -44,11 +44,11 @@ function Profile(props) {
     };
     password != '' ? (payload.password = password) : '';
     axios
-      .patch('https://fine-lime-catfish-vest.cyclic.app/users', payload)
+      .patch('https://api-indoor-positioning.vercel.app/users', payload)
       .then(response => {
         const token = state?.authSlice?.token;
         axios
-          .get('https://fine-lime-catfish-vest.cyclic.app/users')
+          .get('https://api-indoor-positioning.vercel.app/users')
           .then(value => {
             const profile = value?.data?.result[0];
             dispatch(

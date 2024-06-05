@@ -33,7 +33,7 @@ function EditFingerprint(props) {
     setIsGetLoading(true);
     axios
       .get(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
+        `https://api-indoor-positioning.vercel.app/fingerprint/${fingerprint_id}`,
       )
       .then(res => {
         const data = res?.data?.result[0];
@@ -58,7 +58,7 @@ function EditFingerprint(props) {
     console.log(payload);
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
+        `https://api-indoor-positioning.vercel.app/fingerprint/${fingerprint_id}`,
         payload,
       )
       .then(res => {
@@ -78,7 +78,7 @@ function EditFingerprint(props) {
     setIsLoading(true);
     axios
       .delete(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/${fingerprint_id}`,
+        `https://api-indoor-positioning.vercel.app/fingerprint/${fingerprint_id}`,
       )
       .then(res => {
         console.log(res?.data?.message);

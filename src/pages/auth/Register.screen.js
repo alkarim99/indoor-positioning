@@ -37,7 +37,7 @@ function Register(props) {
   const handleRegister = () => {
     setIsLoading(true);
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/users', {
+      .post('https://api-indoor-positioning.vercel.app/users', {
         email,
         password,
         fullname,

@@ -33,7 +33,7 @@ function DetailNavigasi(props) {
     getWifiList();
     axios
       .get(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantaiId}`,
+        `https://api-indoor-positioning.vercel.app/fingerprint/lantai/${lantaiId}`,
       )
       .then(res => {
         const data = res?.data?.result;
@@ -53,7 +53,7 @@ function DetailNavigasi(props) {
     setLocation('');
     const payload = {rss: '9,11,5,2', lantai_id: lantaiId};
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/location', payload)
+      .post('https://api-indoor-positioning.vercel.app/location', payload)
       .then(res => {
         setIsSuccess(true);
         setLocation(res?.data?.result?.kNN?.kNNLocation);
@@ -89,7 +89,7 @@ function DetailNavigasi(props) {
     const payload = {start: location, end, lantai: lantaiId};
     axios
       .post(
-        'https://fine-lime-catfish-vest.cyclic.app/navigation/find',
+        'https://api-indoor-positioning.vercel.app/navigation/find',
         payload,
       )
       .then(res => {

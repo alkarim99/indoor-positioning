@@ -25,7 +25,7 @@ function EditWeight(props) {
   useEffect(() => {
     setIsGetLoading(true);
     axios
-      .get(`https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`)
+      .get(`https://api-indoor-positioning.vercel.app/weight/${weight_id}`)
       .then(res => {
         const data = res?.data?.result[0];
         setWeight(data?.weight);
@@ -44,7 +44,7 @@ function EditWeight(props) {
     const payload = {weight};
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`,
+        `https://api-indoor-positioning.vercel.app/weight/${weight_id}`,
         payload,
       )
       .then(res => {
@@ -64,7 +64,7 @@ function EditWeight(props) {
     setIsLoading(true);
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/weight/activate/${weight_id}`,
+        `https://api-indoor-positioning.vercel.app/weight/activate/${weight_id}`,
       )
       .then(res => {
         console.log(res?.data?.message);
@@ -82,7 +82,7 @@ function EditWeight(props) {
   const handleDelete = async () => {
     setIsLoading(true);
     axios
-      .delete(`https://fine-lime-catfish-vest.cyclic.app/weight/${weight_id}`)
+      .delete(`https://api-indoor-positioning.vercel.app/weight/${weight_id}`)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);

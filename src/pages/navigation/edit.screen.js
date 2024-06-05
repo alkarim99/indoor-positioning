@@ -28,7 +28,7 @@ function EditNavigation(props) {
     setIsGetLoading(true);
     axios
       .get(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+        `https://api-indoor-positioning.vercel.app/navigation/${navigation_id}`,
       )
       .then(res => {
         const data = res?.data?.result[0];
@@ -50,7 +50,7 @@ function EditNavigation(props) {
     const payload = {start, lantai, end, route: routeData};
     axios
       .patch(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+        `https://api-indoor-positioning.vercel.app/navigation/${navigation_id}`,
         payload,
       )
       .then(res => {
@@ -70,7 +70,7 @@ function EditNavigation(props) {
     setIsLoading(true);
     axios
       .delete(
-        `https://fine-lime-catfish-vest.cyclic.app/navigation/${navigation_id}`,
+        `https://api-indoor-positioning.vercel.app/navigation/${navigation_id}`,
       )
       .then(res => {
         console.log(res?.data?.message);

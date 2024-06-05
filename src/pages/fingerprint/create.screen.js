@@ -33,7 +33,7 @@ function CreateFingerprint(props) {
     setIsLoading(true);
     const payload = {name, lantai, coord_x: coordX, coord_y: coordY, rss};
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/fingerprint', payload)
+      .post('https://api-indoor-positioning.vercel.app/fingerprint', payload)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);

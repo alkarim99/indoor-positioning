@@ -22,7 +22,7 @@ function CreateWeight(props) {
     setIsLoading(true);
     const payload = {weight};
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/weight', payload)
+      .post('https://api-indoor-positioning.vercel.app/weight', payload)
       .then(res => {
         console.log(res?.data?.message);
         setIsSuccess(true);

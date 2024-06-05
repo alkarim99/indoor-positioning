@@ -21,7 +21,7 @@ function IndexFingerprint(props) {
     setIsGetLoading(true);
     axios
       .get(
-        `https://fine-lime-catfish-vest.cyclic.app/fingerprint/lantai/${lantai}`,
+        `https://api-indoor-positioning.vercel.app/fingerprint/lantai/${lantai}`,
       )
       .then(res => {
         setListData(res?.data?.result);

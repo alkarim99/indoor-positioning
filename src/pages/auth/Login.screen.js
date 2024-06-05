@@ -35,7 +35,7 @@ function Login(props) {
   const handleLogin = () => {
     setIsLoading(true);
     axios
-      .post('https://fine-lime-catfish-vest.cyclic.app/auth/login', {
+      .post('https://api-indoor-positioning.vercel.app/auth/login', {
         email,
         password,
       })
