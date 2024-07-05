@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableHighlight,
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 
 function CreateFingerprint(props) {
   const {navigation, route} = props;
@@ -109,8 +110,22 @@ function CreateFingerprint(props) {
                     style={{
                       paddingTop: 2,
                       paddingBottom: 2,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}
                     key={index}>
+                    <CheckBox
+                      value={rss.includes(wifi?.level)}
+                      onValueChange={() => {
+                        let newRss = [...rss];
+                        if (newRss.includes(wifi?.level)) {
+                          newRss = newRss.filter(r => r !== wifi?.level);
+                        } else {
+                          newRss.push(wifi?.level);
+                        }
+                        setRss(newRss);
+                      }}
+                    />
                     <Text
                       style={{
                         color: 'black',
@@ -119,6 +134,14 @@ function CreateFingerprint(props) {
                       SSID = {wifi?.SSID}, RSS = {wifi?.level} dBm
                     </Text>
                   </View>
+                  {index !== wifiList.length - 1 && (
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#0000001a',
+                      }}
+                    />
+                  )}
                 </>
               );
             })
